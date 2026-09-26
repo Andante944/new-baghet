@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class SetLocale
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        $locale = $request->query('lang')
+            ?: session('locale', config('app.locale', 'ru'));
+
+        if (! in_array($locale, ['ru', 'ro'], true)) {
+            $locale = 'ru';
+        }
+
+        if ($request->query('lang') && in_array($request->query('lang'), ['ru', 'ro'], true)) {
+            session(['locale' => $locale]);
+        }
+
+        app()->setLocale($locale);
+
+        return $next($request);
+    }
+}

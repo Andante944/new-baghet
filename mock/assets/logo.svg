@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="40" viewBox="0 0 120 40" role="img" aria-label="Baghet">
+  <rect width="120" height="40" fill="#1C1917"/>
+  <text x="12" y="26" fill="#F7F4EF" font-family="Georgia, serif" font-size="18">Baghet</text>
+  <circle cx="108" cy="20" r="4" fill="#B08D57"/>
+</svg>

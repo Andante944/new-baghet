@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Фурнитура — Baghet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body data-catalog="hardware">
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="logo" href="index.html">Baghet<span>.</span></a>
+        <nav class="nav" data-nav>
+          <a href="index.html">Baghet</a>
+          <a href="plastic.html" data-i18n="nav_plastic">Пластиковый багет</a>
+          <a class="is-active" href="hardware.html" data-i18n="nav_hardware">Фурнитура</a>
+          <a href="contacts.html" data-i18n="nav_contacts">Контакты</a>
+        </nav>
+        <div class="header-actions">
+          <div class="lang-switch" role="group" aria-label="Language">
+            <button type="button" class="lang-btn" data-lang="ru">RU</button>
+            <button type="button" class="lang-btn" data-lang="ro">RO</button>
+          </div>
+          <a class="btn btn--sm btn--outline" href="#" data-i18n="nav_login">Войти</a>
+          <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="catalog-layout">
+      <aside>
+        <form class="filters" data-filters>
+          <h2 data-i18n="section_cats">Каталог</h2>
+
+          <fieldset class="filter-group">
+            <legend data-i18n="filter_type">Тип</legend>
+            <label><input type="checkbox" name="type" value="staples" /> <span data-i18n="type_staples">Скобы</span></label>
+            <label><input type="checkbox" name="type" value="hangers" /> <span data-i18n="type_hangers">Подвесы</span></label>
+            <label><input type="checkbox" name="type" value="corners" /> <span data-i18n="type_corners">Уголки</span></label>
+            <label><input type="checkbox" name="type" value="other" /> <span data-i18n="type_other">Прочее</span></label>
+          </fieldset>
+        </form>
+      </aside>
+
+      <section>
+        <div class="catalog-toolbar">
+          <div>
+            <h1 data-i18n="cat_hardware_title">Фурнитура</h1>
+            <p data-i18n="catalog_hardware_lead">Комплектующие для сборки рам. Группы — демо для макета.</p>
+          </div>
+          <p class="results-count"><span data-i18n="results">Найдено</span>: <span data-results-count>0</span></p>
+        </div>
+        <div class="product-grid" data-product-grid></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <span data-i18n="footer_note">Baghet.md · пластиковый багет и фурнитура</span>
+        <a href="contacts.html" data-i18n="nav_contacts">Контакты</a>
+      </div>
+    </footer>
+
+    <script src="js/products.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

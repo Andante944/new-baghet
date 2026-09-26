@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Контакты — Baghet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="logo" href="index.html">Baghet<span>.</span></a>
+        <nav class="nav" data-nav>
+          <a href="index.html">Baghet</a>
+          <a href="plastic.html" data-i18n="nav_plastic">Пластиковый багет</a>
+          <a href="hardware.html" data-i18n="nav_hardware">Фурнитура</a>
+          <a class="is-active" href="contacts.html" data-i18n="nav_contacts">Контакты</a>
+        </nav>
+        <div class="header-actions">
+          <div class="lang-switch" role="group" aria-label="Language">
+            <button type="button" class="lang-btn" data-lang="ru">RU</button>
+            <button type="button" class="lang-btn" data-lang="ro">RO</button>
+          </div>
+          <a class="btn btn--sm btn--outline" href="#" data-i18n="nav_login">Войти</a>
+          <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="section">
+      <div class="section__head">
+        <h2 data-i18n="contacts_title">Контакты</h2>
+        <p data-i18n="contacts_lead">
+          Склад и офис в Кишинёве. Работаем с багетными мастерскими и постоянными клиентами.
+        </p>
+      </div>
+
+      <div class="contacts-grid">
+        <div>
+          <ul class="contact-list">
+            <li>
+              <span class="label" data-i18n="address_label">Адрес</span>
+              <span data-i18n="address_value">Chișinău, str. Cuza Vodă 18/5</span>
+            </li>
+            <li>
+              <span class="label" data-i18n="phone_label">Телефон</span>
+              <a href="tel:+37369295652">+373 69 295 652</a><br />
+              <a href="tel:+37360070758">+373 60 07 07 58</a>
+            </li>
+            <li>
+              <span class="label" data-i18n="email_label">Email</span>
+              <a href="mailto:info@baghet.md">info@baghet.md</a>
+            </li>
+            <li>
+              <span class="label" data-i18n="hours_label">Часы работы</span>
+              <span data-i18n="hours_value">Пн–Пт: 9:00–17:00</span>
+            </li>
+          </ul>
+        </div>
+        <div class="map-placeholder" data-i18n="map_placeholder">Карта — заглушка</div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <span data-i18n="footer_note">Baghet.md · пластиковый багет и фурнитура</span>
+        <a href="contacts.html" data-i18n="nav_contacts">Контакты</a>
+      </div>
+    </footer>
+
+    <script src="js/products.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

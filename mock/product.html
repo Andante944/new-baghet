@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Товар — Baghet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="logo" href="index.html">Baghet<span>.</span></a>
+        <nav class="nav" data-nav>
+          <a href="index.html">Baghet</a>
+          <a href="plastic.html" data-i18n="nav_plastic">Пластиковый багет</a>
+          <a href="hardware.html" data-i18n="nav_hardware">Фурнитура</a>
+          <a href="contacts.html" data-i18n="nav_contacts">Контакты</a>
+        </nav>
+        <div class="header-actions">
+          <div class="lang-switch" role="group" aria-label="Language">
+            <button type="button" class="lang-btn" data-lang="ru">RU</button>
+            <button type="button" class="lang-btn" data-lang="ro">RO</button>
+          </div>
+          <a class="btn btn--sm btn--outline" href="#" data-i18n="nav_login">Войти</a>
+          <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="product-page" data-product-page></main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <span data-i18n="footer_note">Baghet.md · пластиковый багет и фурнитура</span>
+        <a href="contacts.html" data-i18n="nav_contacts">Контакты</a>
+      </div>
+    </footer>
+
+    <script src="js/products.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Baghet — пластиковый багет и фурнитура</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="logo" href="index.html">Baghet<span>.</span></a>
+        <nav class="nav" data-nav>
+          <a class="is-active" href="index.html">Baghet</a>
+          <a href="plastic.html" data-i18n="nav_plastic">Пластиковый багет</a>
+          <a href="hardware.html" data-i18n="nav_hardware">Фурнитура</a>
+          <a href="contacts.html" data-i18n="nav_contacts">Контакты</a>
+        </nav>
+        <div class="header-actions">
+          <div class="lang-switch" role="group" aria-label="Language">
+            <button type="button" class="lang-btn" data-lang="ru">RU</button>
+            <button type="button" class="lang-btn" data-lang="ro">RO</button>
+          </div>
+          <a class="btn btn--sm btn--outline" href="#" data-i18n="nav_login">Войти</a>
+          <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero__texture" aria-hidden="true"></div>
+        <div class="hero__inner">
+          <p class="eyebrow" data-i18n="brand_tag">Официальный представитель Dart Molding в Молдове</p>
+          <h1>Baghet</h1>
+          <p class="hero__text" data-i18n="hero_text">
+            Витрина для постоянных клиентов: актуальные цены и наличие со склада в Кишинёве.
+          </p>
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="plastic.html" data-i18n="cta_plastic">Смотреть багет</a>
+            <a class="btn btn--ghost" href="hardware.html" data-i18n="cta_hardware">Смотреть фурнитуру</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section__head">
+          <h2 data-i18n="section_cats">Каталог</h2>
+          <p data-i18n="hero_title">Пластиковый багет и фурнитура</p>
+        </div>
+        <div class="cat-split">
+          <a class="cat-panel cat-panel--plastic" href="plastic.html">
+            <h3 data-i18n="cat_plastic_title">Пластиковый багет</h3>
+            <p data-i18n="cat_plastic_text">Профили для рам, репродукций и фото. Более 200 артикулов.</p>
+            <span class="btn btn--ghost" data-i18n="cta_plastic">Смотреть багет</span>
+          </a>
+          <a class="cat-panel cat-panel--hardware" href="hardware.html">
+            <h3 data-i18n="cat_hardware_title">Фурнитура</h3>
+            <p data-i18n="cat_hardware_text">Скобы, подвесы, уголки и комплектующие для сборки рам.</p>
+            <span class="btn btn--ghost" data-i18n="cta_hardware">Смотреть фурнитуру</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="cta-band">
+        <div class="cta-band__inner">
+          <div>
+            <h2 data-i18n="cta_login">Для постоянных клиентов</h2>
+            <p data-i18n="add_request_hint">Войдите, чтобы оформить заявку</p>
+          </div>
+          <a class="btn btn--primary" href="#" data-i18n="nav_login">Войти</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <span data-i18n="footer_note">Baghet.md · пластиковый багет и фурнитура</span>
+        <a href="contacts.html" data-i18n="nav_contacts">Контакты</a>
+      </div>
+    </footer>
+
+    <script src="js/products.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
