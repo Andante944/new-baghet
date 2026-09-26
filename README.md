@@ -23,4 +23,14 @@ php artisan baghet:scrape --only=hardware --limit=20
 php artisan baghet:scrape --no-images
 ```
 
-Цены и остатки сейчас с PrestaShop; позже их заменит sync из Битрикс CRM (по `sku` / `bitrix_id`).
+Картинки и атрибуты — с PrestaShop (`baghet:scrape`). Имена и цены продажи
+для багета — из **etichete-crm** (источник истины), матч по `sku`:
+
+```bash
+# .env: CRM_CATALOG_URL=https://…/api/bagheta/catalog
+#       CRM_CATALOG_TOKEN=…
+php artisan baghet:sync-crm-catalog
+```
+
+После привязки (`crm_product_id`) повторный scrape **не** перезаписывает
+`name_*` и `price` — только картинки, остатки и прочие поля.

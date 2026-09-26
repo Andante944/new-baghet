@@ -26,6 +26,7 @@ class Product extends Model
         'image_path',
         'source_url',
         'bitrix_id',
+        'crm_product_id',
         'is_active',
     ];
 
@@ -34,8 +35,14 @@ class Product extends Model
         return [
             'price' => 'decimal:2',
             'stock' => 'integer',
+            'crm_product_id' => 'integer',
             'is_active' => 'boolean',
         ];
+    }
+
+    public function isBoundToCrm(): bool
+    {
+        return $this->crm_product_id !== null;
     }
 
     public function category(): BelongsTo
