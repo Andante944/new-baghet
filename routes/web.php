@@ -9,6 +9,8 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SitemapController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [CatalogController::class, 'home'])->name('home');
@@ -19,6 +21,18 @@ Route::get('/product/{slug}', [CatalogController::class, 'show'])->name('catalog
 Route::get('/contacts', ContactController::class)->name('contacts');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
+
+// Планировщик CRM дёргает этот адрес раз в сутки: у контейнера витрины нет cron.
+Route::get('/sync-crm', function (Request $request) {
+    $expected = (string) config('services.crm.sync_token');
+    $given = (string) $request->query('token', '');
+
+    abort_if($expected === '' || ! hash_equals($expected, $given), 403);
+
+    Artisan::call('baghet:sync-crm-catalog');
+
+    return response(Artisan::output(), 200, ['Content-Type' => 'text/plain; charset=utf-8']);
+})->name('crm.sync');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');

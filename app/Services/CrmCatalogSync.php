@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Log;
 
 class CrmCatalogSync
 {
+    /** Длина палки багета: в CRM цена за палку, на витрине — за метр. */
+    private const STICK_LENGTH_M = 2.9;
+
     /**
      * Pull bagheta name/sale_price from etichete-crm and bind by sku.
      *
@@ -48,11 +51,27 @@ class CrmCatalogSync
 
             $crmId = (int) ($item['id'] ?? 0);
             $name = trim((string) ($item['name'] ?? ''));
-            $price = isset($item['sale_price']) ? (float) $item['sale_price'] : null;
+            // Витрина показывает цену за метр: берём sale_price_per_meter,
+            // а если её нет — делим цену палки на её длину.
+            $price = null;
+            if (isset($item['sale_price_per_meter']) && (float) $item['sale_price_per_meter'] > 0) {
+                $price = round((float) $item['sale_price_per_meter'], 4);
+            } elseif (isset($item['sale_price']) && (float) $item['sale_price'] > 0) {
+                $price = round((float) $item['sale_price'] / self::STICK_LENGTH_M, 4);
+            }
 
             $payload = [];
             if ($crmId > 0 && (int) $product->crm_product_id !== $crmId) {
-                $payload['crm_product_id'] = $crmId;
+                // Один sku может встретиться дважды на сайте — привязку
+                // (уникальную) получает только первая карточка.
+                $takenByOther = Product::query()
+                    ->where('crm_product_id', $crmId)
+                    ->whereKeyNot($product->id)
+                    ->exists();
+
+                if (! $takenByOther) {
+                    $payload['crm_product_id'] = $crmId;
+                }
             }
             if ($name !== '' && $product->name_ru !== $name) {
                 $payload['name_ru'] = $name;

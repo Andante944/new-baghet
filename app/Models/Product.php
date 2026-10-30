@@ -33,7 +33,7 @@ class Product extends Model
     protected function casts(): array
     {
         return [
-            'price' => 'decimal:2',
+            'price' => 'decimal:4',
             'stock' => 'integer',
             'crm_product_id' => 'integer',
             'is_active' => 'boolean',
@@ -105,3 +105,4 @@ class Product extends Model
         return auth()->check() ? $this->wholesalePrice() : $this->retailPrice();
     }
 }
+
