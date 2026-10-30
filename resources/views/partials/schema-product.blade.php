@@ -4,7 +4,7 @@
         '@type' => 'Product',
         'name' => $product->localizedName(),
         'sku' => $product->sku,
-        'description' => $product->localizedDescription() ?: ($product->localizedName().' — Baghet'),
+        'description' => trim(strip_tags((string) ($product->descriptionHtml() ?: $product->localizedName().' — Baghet'))),
         'image' => array_values(array_filter([$product->imageUrl()])),
         'brand' => [
             '@type' => 'Brand',
