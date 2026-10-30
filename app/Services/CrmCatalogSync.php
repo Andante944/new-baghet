@@ -23,6 +23,7 @@ class CrmCatalogSync
             'matched' => 0,
             'updated' => 0,
             'created' => 0,
+            'hidden' => 0,
             'unbound' => 0,
             'missing_local' => 0,
         ];
@@ -104,6 +105,20 @@ class CrmCatalogSync
 
         $localSkus = $products->pluck('sku')->all();
         $plasticId = Category::query()->where('slug', 'plastic')->value('id');
+
+        // Витрина зеркалит каталог CRM: товары «Пластика», которых в CRM нет,
+        // скрываем. Так на сайте не остаётся старых дублей PrestaShop.
+        if ($plasticId !== null) {
+            $hidden = Product::query()
+                ->where('category_id', $plasticId)
+                ->where('is_active', true)
+                ->whereNotIn('sku', array_keys($bySku))
+                ->update(['is_active' => false]);
+
+            if ($hidden > 0) {
+                $stats['hidden'] = $hidden;
+            }
+        }
 
         foreach ($bySku as $sku => $item) {
             if (in_array($sku, $localSkus, true)) {

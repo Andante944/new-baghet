@@ -24,8 +24,8 @@ class SyncCrmCatalogCommand extends Command
         }
 
         $this->table(
-            ['Matched', 'Updated', 'Created', 'Unbound local', 'CRM-only sku'],
-            [[$stats['matched'], $stats['updated'], $stats['created'], $stats['unbound'], $stats['missing_local']]]
+            ['Matched', 'Updated', 'Created', 'Hidden', 'Unbound local', 'CRM-only sku'],
+            [[$stats['matched'], $stats['updated'], $stats['created'], $stats['hidden'], $stats['unbound'], $stats['missing_local']]]
         );
 
         return self::SUCCESS;
