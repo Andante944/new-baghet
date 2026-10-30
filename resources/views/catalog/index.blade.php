@@ -86,10 +86,18 @@
                 @endif
             @endif
 
+            @php
+                $hasFilterGroups = $category->slug === 'plastic'
+                    ? ($availableWidths->isNotEmpty() || $availableColors->isNotEmpty())
+                    : $availableTypes->isNotEmpty();
+            @endphp
+
+            @if($hasFilterGroups)
             <div style="display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap">
                 <button class="btn btn--primary btn--sm" type="submit">{{ __('site.apply_filters') }}</button>
                 <a class="btn btn--outline btn--sm" href="{{ $catalogRoute }}">{{ __('site.reset_filters') }}</a>
             </div>
+            @endif
         </form>
     </aside>
 
