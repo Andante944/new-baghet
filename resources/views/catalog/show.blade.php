@@ -47,6 +47,16 @@
                         decoding="async"
                         style="width:100%;height:100%;object-fit:contain;padding:1.5rem;"
                     >
+                @else
+                    <img
+                        src="{{ asset('images/no-photo.svg') }}"
+                        alt="{{ $product->localizedName() }} — фото скоро"
+                        width="640"
+                        height="480"
+                        loading="eager"
+                        decoding="async"
+                        style="width:100%;height:100%;object-fit:contain;padding:1.5rem;"
+                    >
                 @endif
             </div>
         </div>
