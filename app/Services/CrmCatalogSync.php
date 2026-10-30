@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -21,6 +22,7 @@ class CrmCatalogSync
         $stats = [
             'matched' => 0,
             'updated' => 0,
+            'created' => 0,
             'unbound' => 0,
             'missing_local' => 0,
         ];
@@ -76,6 +78,11 @@ class CrmCatalogSync
             if ($name !== '' && $product->name_ru !== $name) {
                 $payload['name_ru'] = $name;
             }
+            // Товар есть в каталоге CRM — он должен быть виден на витрине.
+            // Исключение: в названии CRM помечено «снят».
+            if (! $product->is_active && ! str_contains(mb_strtolower($name), 'снят')) {
+                $payload['is_active'] = true;
+            }
             if ($price !== null && (float) $product->price !== $price) {
                 $payload['price'] = $price;
             }
@@ -96,10 +103,50 @@ class CrmCatalogSync
         }
 
         $localSkus = $products->pluck('sku')->all();
-        foreach (array_keys($bySku) as $sku) {
-            if (! in_array($sku, $localSkus, true)) {
-                $stats['missing_local']++;
+        $plasticId = Category::query()->where('slug', 'plastic')->value('id');
+
+        foreach ($bySku as $sku => $item) {
+            if (in_array($sku, $localSkus, true)) {
+                continue;
             }
+
+            // Товар появился в CRM, но его не было в PrestaShop — создаём карточку,
+            // чтобы он был виден в каталоге. Картинки у CRM нет: покажем заглушку.
+            $name = trim((string) ($item['name'] ?? ''));
+            if ($plasticId === null || $name === '') {
+                $stats['missing_local']++;
+
+                continue;
+            }
+
+            $price = null;
+            if (isset($item['sale_price_per_meter']) && (float) $item['sale_price_per_meter'] > 0) {
+                $price = round((float) $item['sale_price_per_meter'], 4);
+            } elseif (isset($item['sale_price']) && (float) $item['sale_price'] > 0) {
+                $price = round((float) $item['sale_price'] / self::STICK_LENGTH_M, 4);
+            }
+
+            $slug = trim((string) preg_replace('/[^a-z0-9]+/', '-', mb_strtolower($sku)), '-');
+            if ($slug === '' || Product::query()->where('slug', $slug)->exists()) {
+                $slug = 'crm-'.($item['id'] ?? uniqid());
+            }
+
+            $crmId = (int) ($item['id'] ?? 0);
+            $crmIdTaken = $crmId > 0 && Product::query()->where('crm_product_id', $crmId)->exists();
+
+            Product::query()->create([
+                'category_id' => $plasticId,
+                'sku' => $sku,
+                'slug' => $slug,
+                'name_ru' => $name,
+                'name_ro' => $name,
+                'price' => $price ?? 0,
+                'stock' => isset($item['qty']) && $item['qty'] !== null ? (int) round((float) $item['qty']) : 0,
+                'is_active' => ! str_contains(mb_strtolower($name), 'снят'),
+                'crm_product_id' => ($crmId > 0 && ! $crmIdTaken) ? $crmId : null,
+            ]);
+
+            $stats['created']++;
         }
 
         return $stats;
