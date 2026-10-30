@@ -207,6 +207,11 @@ class BaghetScraper
             'is_active' => true,
         ];
 
+        // CRM owns name + sale price once bound; keep scraped images/stock/attrs.
+        if ($existing?->crm_product_id) {
+            unset($payload['name_ru'], $payload['name_ro'], $payload['price']);
+        }
+
         if ($existing) {
             $existing->update($payload);
 

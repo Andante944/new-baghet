@@ -37,4 +37,9 @@ return [
 
     'google_analytics_id' => env('GOOGLE_ANALYTICS_ID'),
 
+    'crm' => [
+        'catalog_url' => env('CRM_CATALOG_URL'),
+        'catalog_token' => env('CRM_CATALOG_TOKEN'),
+    ],
+
 ];
