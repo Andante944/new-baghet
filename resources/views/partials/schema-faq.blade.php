@@ -19,14 +19,6 @@
                     'text' => __('site.faq_a2'),
                 ],
             ],
-            [
-                '@type' => 'Question',
-                'name' => __('site.faq_q3'),
-                'acceptedAnswer' => [
-                    '@type' => 'Answer',
-                    'text' => __('site.faq_a3'),
-                ],
-            ],
         ],
     ];
 @endphp

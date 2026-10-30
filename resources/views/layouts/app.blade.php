@@ -38,31 +38,6 @@
             <a href="{{ route('catalog.plastic') }}" @class(['is-active' => request()->routeIs('catalog.plastic')])>{{ __('site.nav_plastic') }}</a>
             <a href="{{ route('catalog.hardware') }}" @class(['is-active' => request()->routeIs('catalog.hardware')])>{{ __('site.nav_hardware') }}</a>
             <a href="{{ route('contacts') }}" @class(['is-active' => request()->routeIs('contacts')])>{{ __('site.nav_contacts') }}</a>
-            <div
-                class="site-search"
-                data-site-search
-                data-search-url="{{ route('catalog.search') }}"
-                data-empty-text="{{ __('site.search_empty') }}"
-                data-stock-text="{{ __('site.in_stock') }}"
-                data-out-text="{{ __('site.out_stock') }}"
-            >
-                <label class="site-search__field">
-                    <span class="sr-only">{{ __('site.search_products') }}</span>
-                    <svg viewBox="0 0 20 20" aria-hidden="true">
-                        <path d="m14.5 14.5 4 4m-2-9a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                    </svg>
-                    <input
-                        type="search"
-                        autocomplete="off"
-                        placeholder="{{ __('site.search_placeholder') }}"
-                        aria-label="{{ __('site.search_products') }}"
-                        aria-expanded="false"
-                        data-search-input
-                    >
-                    <span class="site-search__loader" aria-hidden="true" data-search-loader></span>
-                </label>
-                <div class="site-search__results" role="listbox" data-search-results hidden></div>
-            </div>
             @auth
                 @if(auth()->user()->isAdmin())
                     <a href="{{ route('admin.dashboard') }}" @class(['is-active' => request()->routeIs('admin.*')])>{{ __('site.nav_admin') }}</a>
@@ -71,6 +46,33 @@
                 @endif
             @endauth
         </nav>
+
+        <div
+            class="site-search"
+            data-site-search
+            data-search-url="{{ route('catalog.search') }}"
+            data-empty-text="{{ __('site.search_empty') }}"
+            data-stock-text="{{ __('site.in_stock') }}"
+            data-out-text="{{ __('site.out_stock') }}"
+        >
+            <label class="site-search__field">
+                <span class="sr-only">{{ __('site.search_products') }}</span>
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="m14.5 14.5 4 4m-2-9a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+                <input
+                    type="search"
+                    autocomplete="off"
+                    placeholder="{{ __('site.search_placeholder') }}"
+                    aria-label="{{ __('site.search_products') }}"
+                    aria-expanded="false"
+                    data-search-input
+                >
+                <span class="site-search__loader" aria-hidden="true" data-search-loader></span>
+            </label>
+            <div class="site-search__results" role="listbox" data-search-results hidden></div>
+        </div>
+
         <div class="header-actions">
             <div class="lang-switch" role="group" aria-label="Language">
                 <a class="lang-btn @if(app()->getLocale()==='ru') is-active @endif" href="{{ route('locale.switch', 'ru') }}">RU</a>
@@ -124,6 +126,17 @@ document.querySelector('[data-nav-toggle]')?.addEventListener('click', function 
     const open = nav.classList.toggle('is-open');
     this.setAttribute('aria-expanded', open ? 'true' : 'false');
 });
+
+// На мобильной шапка выше (поиск отдельной строкой) — держим --header-h
+// в актуальном значении, чтобы меню и «липкие» блоки вставали под неё.
+(function () {
+    const header = document.querySelector('.site-header');
+    if (!header) return;
+    const sync = () => document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+    sync();
+    window.addEventListener('resize', sync);
+    window.addEventListener('load', sync);
+})();
 
 (function () {
     const root = document.querySelector('[data-site-search]');

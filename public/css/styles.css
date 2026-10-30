@@ -1731,3 +1731,18 @@ input {
 .product-description ol { margin: 0 0 .75rem 1.1rem; padding: 0; }
 .product-description li { margin: .15rem 0; }
 .product-description strong { color: var(--ink); font-weight: 600; }
+/* Мобильная шапка: поиск отдельной строкой сверху, без сэндвич-меню */
+@media (max-width: 720px) {
+  .site-header { height: auto; }
+  .site-header__inner {
+    flex-wrap: wrap;
+    padding-block: 0.5rem;
+    row-gap: 0.4rem;
+  }
+  .site-search {
+    order: 10;
+    width: 100%;
+    margin: 0 0 0.15rem;
+  }
+  .site-search__field { height: 40px; }
+}

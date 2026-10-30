@@ -59,10 +59,6 @@
             <summary>{{ __('site.faq_q2') }}</summary>
             <p>{{ __('site.faq_a2') }}</p>
         </details>
-        <details class="faq-item">
-            <summary>{{ __('site.faq_q3') }}</summary>
-            <p>{{ __('site.faq_a3') }}</p>
-        </details>
     </div>
 </section>
 
