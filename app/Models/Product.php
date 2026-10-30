@@ -69,6 +69,23 @@ class Product extends Model
         return $locale === 'ro' ? ($this->description_ro ?: $this->description_ru) : $this->description_ru;
     }
 
+    /**
+     * Описание из PrestaShop приходит с inline-стилями (шрифт, цвет, размер) —
+     * они ломают вёрстку витрины. Оставляем только базовую разметку.
+     */
+    public function descriptionHtml(?string $locale = null): ?string
+    {
+        $html = $this->localizedDescription($locale);
+        if ($html === null || trim($html) === '') {
+            return null;
+        }
+
+        $html = preg_replace('/\s(?:style|class|align|width|height|color|face|size|valign|border)\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $html);
+        $html = strip_tags((string) $html, '<p><br><strong><b><em><i><ul><ol><li><h2><h3><h4>');
+
+        return trim((string) $html) === '' ? null : $html;
+    }
+
     public function imageUrl(): ?string
     {
         if (! $this->image_path) {

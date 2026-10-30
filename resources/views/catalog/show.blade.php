@@ -79,8 +79,8 @@
                 </li>
             </ul>
             <p class="hint stock-note">{{ __('site.stock_note') }}</p>
-            @if($product->localizedDescription())
-                <p style="color:var(--ink-soft);margin:0 0 1.5rem">{{ $product->localizedDescription() }}</p>
+            @if($product->descriptionHtml())
+                <div class="product-description">{!! $product->descriptionHtml() !!}</div>
             @endif
             @auth
                 @unless(auth()->user()->isAdmin())

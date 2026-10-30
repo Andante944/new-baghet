@@ -79,6 +79,13 @@ class CrmCatalogSync
             if ($price !== null && (float) $product->price !== $price) {
                 $payload['price'] = $price;
             }
+            // Остатки на витрине тоже ведёт CRM (qty в каталоге).
+            if (isset($item['qty']) && $item['qty'] !== null) {
+                $stock = (int) round((float) $item['qty']);
+                if ((int) $product->stock !== $stock) {
+                    $payload['stock'] = $stock;
+                }
+            }
 
             if ($payload === []) {
                 continue;
