@@ -155,7 +155,7 @@ return [
     'seo_product_description' => ':name (:sku) — :category de la Baghet. Preț și stoc din depozitul din Chișinău. Reprezentant oficial Dart Molding în Moldova.',
 
     'seo_contacts_title' => 'Contacte Baghet — depozit și birou în Chișinău',
-    'seo_contacts_description' => 'Contacte Baghet: Chișinău, str. Cuza Vodă 18/5. Telefoane +373 69 295 652, +373 60 07 07 58. Lu–Vi 9:00–17:00. info@baghet.md',
+    'seo_contacts_description' => 'Contacte Baghet: telefon +373 69 295 652, lu–vi 9:00–17:00, info@baghet.md',
     'seo_contacts_text' => 'Baghet — depozit și birou în Chișinău. Lucrăm cu ateliere de baghetă și clienți fideli pentru baghetă plastic Dart Molding și feronerie.',
 
     'faq_title' => 'Întrebări frecvente',

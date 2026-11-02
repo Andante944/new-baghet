@@ -155,7 +155,7 @@ return [
     'seo_product_description' => ':name (:sku) — :category от Baghet. Цена и наличие со склада в Кишинёве. Официальный представитель Dart Molding в Молдове.',
 
     'seo_contacts_title' => 'Контакты Baghet — склад и офис в Кишинёве',
-    'seo_contacts_description' => 'Контакты Baghet: Chișinău, str. Cuza Vodă 18/5. Телефоны +373 69 295 652, +373 60 07 07 58. Пн–Пт 9:00–17:00. info@baghet.md',
+    'seo_contacts_description' => 'Контакты Baghet: телефон +373 69 295 652, Пн–Пт 9:00–17:00, info@baghet.md',
     'seo_contacts_text' => 'Baghet — склад и офис в Кишинёве. Работаем с багетными мастерскими и постоянными клиентами по пластиковому багету Dart Molding и фурнитуре.',
 
     'faq_title' => 'Частые вопросы',

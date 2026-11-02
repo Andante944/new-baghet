@@ -1746,3 +1746,5 @@ input {
   }
   .site-search__field { height: 40px; }
 }
+/* Контакты: одна колонка без карты и адреса */
+.contacts-single { max-width: 42rem; }

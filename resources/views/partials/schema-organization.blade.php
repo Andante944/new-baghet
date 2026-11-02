@@ -7,12 +7,10 @@
         'logo' => asset('images/logo.svg'),
         'image' => asset('images/hero-molding.jpg'),
         'email' => 'info@baghet.md',
-        'telephone' => ['+37369295652', '+37360070758'],
-        'address' => [
-            '@type' => 'PostalAddress',
-            'streetAddress' => 'str. Cuza Vodă 18/5',
-            'addressLocality' => 'Chișinău',
-            'addressCountry' => 'MD',
+        'telephone' => '+37369295652',
+        'areaServed' => [
+            '@type' => 'Country',
+            'name' => 'Moldova',
         ],
         'openingHoursSpecification' => [
             '@type' => 'OpeningHoursSpecification',
