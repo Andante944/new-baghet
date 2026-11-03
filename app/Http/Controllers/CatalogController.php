@@ -84,12 +84,23 @@ class CatalogController extends Controller
 
         $query = Product::query()
             ->active()
-            ->where('category_id', $category->id)
-            ->orderBy('sku');
+            ->where('category_id', $category->id);
 
         $widths = array_filter((array) $request->input('width', []));
         $colors = array_filter((array) $request->input('color', []));
         $types = array_filter((array) $request->input('type', []));
+
+        // Мини-фильтр: порядок товаров (по умолчанию — по артикулу).
+        $sort = (string) $request->query('sort', 'default');
+        $sort = in_array($sort, ['price_asc', 'price_desc', 'name', 'new'], true) ? $sort : 'default';
+
+        match ($sort) {
+            'price_asc' => $query->orderBy('price')->orderBy('sku'),
+            'price_desc' => $query->orderByDesc('price')->orderBy('sku'),
+            'name' => $query->orderBy('name_ru'),
+            'new' => $query->orderByDesc('id'),
+            default => $query->orderBy('sku'),
+        };
 
         if ($widths) {
             $query->whereIn('width', $widths);
@@ -133,6 +144,7 @@ class CatalogController extends Controller
             'widths',
             'colors',
             'types',
+            'sort',
         ));
     }
 }

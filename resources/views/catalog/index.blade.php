@@ -2,7 +2,7 @@
 
 @php
     $catalogRoute = $category->slug === 'plastic' ? route('catalog.plastic') : route('catalog.hardware');
-    $hasFilters = filled($widths) || filled($colors) || filled($types);
+    $hasFilters = filled($widths) || filled($colors) || filled($types) || $sort !== 'default';
     $canonical = $hasFilters
         ? $catalogRoute
         : ($products->currentPage() > 1 ? $products->url($products->currentPage()) : $catalogRoute);
@@ -43,7 +43,7 @@
 <div class="catalog-layout">
     <aside>
         <form class="filters" method="get">
-            <h2>{{ __('site.section_cats') }}</h2>
+            <h2>{{ __('site.filter_title') }}</h2>
 
             @if($category->slug === 'plastic')
                 @if($availableWidths->isNotEmpty())
@@ -107,7 +107,26 @@
                 <h1>{{ $category->localizedName() }}</h1>
                 <p>{{ $category->slug === 'plastic' ? __('site.catalog_plastic_lead') : __('site.catalog_hardware_lead') }}</p>
             </div>
-            <p class="results-count">{{ __('site.results') }}: {{ $products->total() }}</p>
+            <div class="catalog-toolbar__side">
+                <form method="get" action="{{ $catalogRoute }}" class="catalog-sort">
+                    @foreach (['width', 'color', 'type'] as $key)
+                        @foreach ((array) request()->input($key, []) as $value)
+                            <input type="hidden" name="{{ $key }}[]" value="{{ $value }}">
+                        @endforeach
+                    @endforeach
+                    <label>
+                        <span>{{ __('site.filter_sort') }}</span>
+                        <select name="sort" onchange="this.form.submit()">
+                            <option value="default" @selected($sort === 'default')>{{ __('site.sort_default') }}</option>
+                            <option value="price_asc" @selected($sort === 'price_asc')>{{ __('site.sort_price_asc') }}</option>
+                            <option value="price_desc" @selected($sort === 'price_desc')>{{ __('site.sort_price_desc') }}</option>
+                            <option value="name" @selected($sort === 'name')>{{ __('site.sort_name') }}</option>
+                            <option value="new" @selected($sort === 'new')>{{ __('site.sort_new') }}</option>
+                        </select>
+                    </label>
+                </form>
+                <p class="results-count">{{ __('site.results') }}: {{ $products->total() }}</p>
+            </div>
         </div>
 
         @if($products->isEmpty())

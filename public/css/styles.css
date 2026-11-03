@@ -1748,3 +1748,38 @@ input {
 }
 /* Контакты: одна колонка без карты и адреса */
 .contacts-single { max-width: 42rem; }
+/* Сортировка в каталоге */
+.catalog-toolbar__side {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.catalog-sort label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.catalog-sort select {
+  height: 34px;
+  padding: 0 0.5rem;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.85rem;
+}
+@media (max-width: 720px) {
+  .catalog-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .catalog-toolbar__side {
+    justify-content: space-between;
+    width: 100%;
+  }
+}
