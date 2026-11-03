@@ -134,43 +134,7 @@
         @else
             <div class="product-grid">
                 @foreach($products as $product)
-                    <a class="product-card" href="{{ route('catalog.show', $product->slug) }}">
-                        <div class="product-visual" @if($category->slug==='hardware') data-hw="{{ $product->type }}" @endif>
-                            @if($product->imageUrl())
-                                <img
-                                    src="{{ $product->imageUrl() }}"
-                                    alt="{{ $product->localizedName() }} — {{ $product->sku }}"
-                                    width="320"
-                                    height="240"
-                                    loading="lazy"
-                                    decoding="async"
-                                    style="width:100%;height:100%;object-fit:contain;padding:1rem;"
-                                >
-                            @elseif($category->slug === 'hardware')
-                                <div class="hw-icon"></div>
-                            @else
-                                <div class="profile-bar profile-bar--outer" style="--tone:#b08d57;background:var(--brass)"></div>
-                            @endif
-                        </div>
-                        <div class="product-meta">
-                            <div class="product-meta__top">
-                                <span class="sku">{{ $product->sku }}</span>
-                                @if($product->inStock())
-                                    <span class="badge badge--ok">{{ __('site.in_stock') }}</span>
-                                @else
-                                    <span class="badge badge--off">{{ __('site.out_stock') }}</span>
-                                @endif
-                            </div>
-                            <div class="product-meta__bottom">
-                                <span class="price">{{ number_format($product->displayPrice(), 2) }} $</span>
-                                <span class="unit">
-                                    {{ $category->slug === 'plastic' ? __('site.price_m') : __('site.price_pack') }}
-                                    @guest · {{ __('site.price_retail_short') }}@endguest
-                                    @auth · {{ __('site.price_wholesale_short') }}@endauth
-                                </span>
-                            </div>
-                        </div>
-                    </a>
+                    @include('partials.product-card', ['product' => $product])
                 @endforeach
             </div>
 

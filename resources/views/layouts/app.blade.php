@@ -47,8 +47,11 @@
             @endauth
         </nav>
 
-        <div
+        <form
             class="site-search"
+            method="get"
+            action="{{ route('catalog.search') }}"
+            role="search"
             data-site-search
             data-search-url="{{ route('catalog.search') }}"
             data-empty-text="{{ __('site.search_empty') }}"
@@ -62,6 +65,7 @@
                 </svg>
                 <input
                     type="search"
+                    name="q"
                     autocomplete="off"
                     placeholder="{{ __('site.search_placeholder') }}"
                     aria-label="{{ __('site.search_products') }}"
@@ -71,7 +75,7 @@
                 <span class="site-search__loader" aria-hidden="true" data-search-loader></span>
             </label>
             <div class="site-search__results" role="listbox" data-search-results hidden></div>
-        </div>
+        </form>
 
         <div class="header-actions">
             <div class="lang-switch" role="group" aria-label="Language">
@@ -257,9 +261,14 @@ document.querySelector('[data-nav-toggle]')?.addEventListener('click', function 
         } else if (event.key === 'ArrowUp') {
             event.preventDefault();
             setActive(activeIndex - 1);
-        } else if (event.key === 'Enter' && activeIndex >= 0) {
+        } else if (event.key === 'Enter') {
             event.preventDefault();
-            results.querySelectorAll('.site-search__item')[activeIndex]?.click();
+            if (activeIndex >= 0) {
+                results.querySelectorAll('.site-search__item')[activeIndex]?.click();
+            } else if (input.value.trim() !== '') {
+                // Enter без выбранной подсказки — страница со всеми результатами.
+                window.location.href = input.form.action + '?q=' + encodeURIComponent(input.value.trim());
+            }
         } else if (event.key === 'Escape') {
             close();
         }

@@ -25,33 +25,36 @@ class CatalogController extends Controller
         return $this->catalog($request, 'hardware');
     }
 
-    public function search(Request $request): JsonResponse
+    public function search(Request $request): JsonResponse|View
     {
         $term = trim((string) $request->query('q', ''));
 
-        if (mb_strlen($term) < 2) {
-            return response()->json(['products' => []]);
+        $query = Product::query()
+            ->active()
+            ->with('category');
+
+        if (mb_strlen($term) >= 2) {
+            $query
+                ->where(function ($sub) use ($term) {
+                    $like = '%'.$term.'%';
+                    $sub->where('sku', 'like', $like)
+                        ->orWhere('name_ru', 'like', $like)
+                        ->orWhere('name_ro', 'like', $like)
+                        ->orWhere('description_ru', 'like', $like)
+                        ->orWhere('description_ro', 'like', $like);
+                })
+                ->orderByRaw('CASE WHEN sku = ? THEN 0 WHEN sku LIKE ? THEN 1 ELSE 2 END', [
+                    $term,
+                    $term.'%',
+                ])
+                ->orderBy('sku');
+        } else {
+            $query->whereRaw('1 = 0');
         }
 
-        $products = Product::query()
-            ->active()
-            ->with('category')
-            ->where(function ($query) use ($term) {
-                $like = '%'.$term.'%';
-                $query->where('sku', 'like', $like)
-                    ->orWhere('name_ru', 'like', $like)
-                    ->orWhere('name_ro', 'like', $like)
-                    ->orWhere('description_ru', 'like', $like)
-                    ->orWhere('description_ro', 'like', $like);
-            })
-            ->orderByRaw('CASE WHEN sku = ? THEN 0 WHEN sku LIKE ? THEN 1 ELSE 2 END', [
-                $term,
-                $term.'%',
-            ])
-            ->orderBy('sku')
-            ->limit(8)
-            ->get()
-            ->map(fn (Product $product) => [
+        // Подсказки в шапке (fetch с Accept: application/json) — короткий список.
+        if ($request->expectsJson()) {
+            $products = $query->limit(8)->get()->map(fn (Product $product) => [
                 'name' => $product->localizedName(),
                 'sku' => $product->sku,
                 'category' => $product->category->localizedName(),
@@ -62,9 +65,15 @@ class CatalogController extends Controller
                 'in_stock' => $product->inStock(),
             ]);
 
-        return response()
-            ->json(['products' => $products])
-            ->header('X-Robots-Tag', 'noindex, nofollow');
+            return response()
+                ->json(['products' => $products])
+                ->header('X-Robots-Tag', 'noindex, nofollow');
+        }
+
+        // Enter в поиске — страница со всеми результатами.
+        $products = $query->paginate(24)->withQueryString();
+
+        return view('catalog.search', compact('products', 'term'));
     }
 
     public function show(string $slug): View

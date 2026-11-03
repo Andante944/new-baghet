@@ -143,6 +143,9 @@ return [
     'search_products' => 'Căutare produse',
     'search_placeholder' => 'Articol sau denumire…',
     'search_empty' => 'Nu au fost găsite produse',
+    'search_results_title' => 'Căutare: „:term”',
+    'search_nothing' => 'Nu am găsit nimic pentru „:term”',
+    'search_go' => 'Caută',
 
     'seo_home_title' => 'Baghet — baghetă plastic și feronerie în Moldova',
     'seo_home_description' => 'Reprezentant oficial Dart Molding în Moldova. Catalog de baghetă plastic și feronerie din depozitul din Chișinău. Prețuri și stoc pentru ateliere de baghetă.',
