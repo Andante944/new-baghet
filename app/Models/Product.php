@@ -80,8 +80,12 @@ class Product extends Model
             return null;
         }
 
-        $html = preg_replace('/\s(?:style|class|align|width|height|color|face|size|valign|border)\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $html);
+        $html = preg_replace('#<(script|style)\b[^>]*>.*?</\1>#is', '', $html);
+        $html = preg_replace('/\s(?:style|class|align|width|height|color|face|size|valign|border)\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', (string) $html);
         $html = strip_tags((string) $html, '<p><br><strong><b><em><i><ul><ol><li><h2><h3><h4>');
+        // strip_tags keeps attributes on allowed tags (onclick, onerror, href…).
+        // Rebuild every allowed opening tag without any attributes.
+        $html = preg_replace('/<(p|br|strong|b|em|i|ul|ol|li|h2|h3|h4)\b[^>]*>/i', '<$1>', (string) $html);
 
         return trim((string) $html) === '' ? null : $html;
     }
@@ -122,4 +126,3 @@ class Product extends Model
         return auth()->check() ? $this->wholesalePrice() : $this->retailPrice();
     }
 }
-

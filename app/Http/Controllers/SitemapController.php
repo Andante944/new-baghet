@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Support\Seo;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 
@@ -12,27 +13,39 @@ class SitemapController extends Controller
     {
         $xml = Cache::remember('sitemap.xml', now()->addHour(), function () {
             $urls = [];
+            $hasImages = false;
 
             $urls[] = $this->url(route('home'), now(), 'daily', '1.0');
             $urls[] = $this->url(route('catalog.plastic'), now(), 'daily', '0.9');
             $urls[] = $this->url(route('catalog.hardware'), now(), 'daily', '0.9');
+            $urls[] = $this->url(route('wholesale'), now(), 'monthly', '0.8');
             $urls[] = $this->url(route('contacts'), now(), 'monthly', '0.7');
 
             Product::query()
                 ->active()
                 ->orderBy('id')
-                ->get(['slug', 'updated_at'])
-                ->each(function (Product $product) use (&$urls) {
+                ->get(['slug', 'updated_at', 'image_path'])
+                ->each(function (Product $product) use (&$urls, &$hasImages) {
+                    $image = $product->imageUrl();
+                    if ($image !== null) {
+                        $hasImages = true;
+                    }
+
                     $urls[] = $this->url(
                         route('catalog.show', $product->slug),
                         $product->updated_at,
                         'weekly',
-                        '0.8'
+                        '0.8',
+                        $image,
                     );
                 });
 
+            $namespace = $hasImages
+                ? ' xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"'
+                : '';
+
             return '<?xml version="1.0" encoding="UTF-8"?>'
-                ."\n".'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+                ."\n".'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"'.$namespace.'>'
                 ."\n".implode("\n", $urls)
                 ."\n".'</urlset>';
         });
@@ -61,10 +74,18 @@ class SitemapController extends Controller
             ->header('Content-Type', 'text/plain; charset=UTF-8');
     }
 
-    private function url(string $loc, $lastmod = null, string $changefreq = 'weekly', string $priority = '0.5'): string
-    {
+    private function url(
+        string $loc,
+        $lastmod = null,
+        string $changefreq = 'weekly',
+        string $priority = '0.5',
+        ?string $image = null,
+    ): string {
         $lastmodXml = $lastmod
             ? '<lastmod>'.optional($lastmod)->toAtomString().'</lastmod>'
+            : '';
+        $imageXml = $image
+            ? '<image:image><image:loc>'.e(Seo::absolute($image)).'</image:loc></image:image>'
             : '';
 
         return '<url>'
@@ -72,6 +93,7 @@ class SitemapController extends Controller
             .$lastmodXml
             .'<changefreq>'.$changefreq.'</changefreq>'
             .'<priority>'.$priority.'</priority>'
+            .$imageXml
             .'</url>';
     }
 }

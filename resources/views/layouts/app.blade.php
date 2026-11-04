@@ -37,6 +37,7 @@
             <a href="{{ route('home') }}" @class(['is-active' => request()->routeIs('home')])>Baghet</a>
             <a href="{{ route('catalog.plastic') }}" @class(['is-active' => request()->routeIs('catalog.plastic')])>{{ __('site.nav_plastic') }}</a>
             <a href="{{ route('catalog.hardware') }}" @class(['is-active' => request()->routeIs('catalog.hardware')])>{{ __('site.nav_hardware') }}</a>
+            <a href="{{ route('wholesale') }}" @class(['is-active' => request()->routeIs('wholesale')])>{{ __('site.nav_wholesale') }}</a>
             <a href="{{ route('contacts') }}" @class(['is-active' => request()->routeIs('contacts')])>{{ __('site.nav_contacts') }}</a>
             @auth
                 @if(auth()->user()->isAdmin())
@@ -117,12 +118,7 @@
     @yield('content')
 </main>
 
-<footer class="site-footer">
-    <div class="site-footer__inner">
-        <span>{{ __('site.footer_note') }}</span>
-        <a href="{{ route('contacts') }}">{{ __('site.nav_contacts') }}</a>
-    </div>
-</footer>
+@include('partials.footer')
 
 <script>
 document.querySelector('[data-nav-toggle]')?.addEventListener('click', function () {

@@ -22,7 +22,32 @@ class SeoTest extends TestCase
             ->assertSee('hreflang="ro"', false)
             ->assertSee('application/ld+json', false)
             ->assertSee('FAQPage', false)
-            ->assertSee('LocalBusiness', false);
+            ->assertSee('LocalBusiness', false)
+            ->assertSee('WebSite', false)
+            ->assertSee('SearchAction', false)
+            ->assertSee('Оптовым покупателям', false);
+    }
+
+    public function test_wholesale_page_has_content_faq_and_schema(): void
+    {
+        $this->get(route('wholesale'))
+            ->assertOk()
+            ->assertSee('Оптовым покупателям')
+            ->assertSee('FAQPage', false)
+            ->assertSee('BreadcrumbList', false)
+            ->assertSee('wholesale')
+            ->assertSee('+373 69 295 652');
+    }
+
+    public function test_romanian_canonical_keeps_language_and_hreflang_is_valid(): void
+    {
+        $base = rtrim(url('/'), '/');
+        $this->get(route('home', ['lang' => 'ro']))
+            ->assertOk()
+            ->assertSee('lang="ro"', false)
+            ->assertSee('rel="canonical" href="'.$base.'/?lang=ro"', false)
+            ->assertSee('hreflang="ru" href="'.$base.'/"', false)
+            ->assertSee('hreflang="ro" href="'.$base.'/?lang=ro"', false);
     }
 
     public function test_catalog_filter_is_noindex_with_clean_canonical(): void
@@ -47,13 +72,23 @@ class SeoTest extends TestCase
             'name_ru' => 'Пластиковый багет',
             'name_ro' => 'Baghetă plastic',
         ]);
-        Product::query()->create([
+        $product = Product::query()->create([
             'category_id' => $category->id,
             'sku' => '100-01-01',
             'slug' => '100-01-01-seo',
             'name_ru' => 'Пластиковый багет: 100-01-01',
             'price' => 12.5,
             'stock' => 5,
+            'image_path' => 'products/100-01-01.jpg',
+            'is_active' => true,
+        ]);
+        Product::query()->create([
+            'category_id' => $category->id,
+            'sku' => '100-01-02',
+            'slug' => '100-01-02-seo',
+            'name_ru' => 'Похожий багет: 100-01-02',
+            'price' => 9.5,
+            'stock' => 3,
             'is_active' => true,
         ]);
 
@@ -61,7 +96,12 @@ class SeoTest extends TestCase
             ->assertOk()
             ->assertSee('"@type": "Product"', false)
             ->assertSee('"sku": "100-01-01"', false)
-            ->assertSee('BreadcrumbList', false);
+            ->assertSee('"mpn": "100-01-01"', false)
+            ->assertSee('"url": "'.route('catalog.show', '100-01-01-seo').'"', false)
+            ->assertSee('BreadcrumbList', false)
+            ->assertSee('product:price:amount', false)
+            ->assertSee('100-01-02')
+            ->assertSee('Похожие товары');
     }
 
     public function test_private_pages_are_noindex(): void
@@ -85,6 +125,7 @@ class SeoTest extends TestCase
             'name_ru' => 'Пластиковый багет: 200-01-01',
             'price' => 8,
             'stock' => 1,
+            'image_path' => 'products/200-01-01.jpg',
             'is_active' => true,
         ]);
 
@@ -97,7 +138,10 @@ class SeoTest extends TestCase
             ->assertOk()
             ->assertHeader('Content-Type', 'application/xml; charset=UTF-8')
             ->assertSee(route('home'), false)
-            ->assertSee(route('catalog.show', '200-01-01-map'), false);
+            ->assertSee(route('wholesale'), false)
+            ->assertSee(route('catalog.show', '200-01-01-map'), false)
+            ->assertSee('image:image', false)
+            ->assertSee('products/200-01-01.jpg', false);
     }
 
     public function test_search_api_sends_noindex_header(): void

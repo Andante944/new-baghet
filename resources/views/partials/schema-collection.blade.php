@@ -1,12 +1,16 @@
 @php
     $listItems = [];
     foreach ($products as $i => $product) {
-        $listItems[] = [
+        $row = [
             '@type' => 'ListItem',
             'position' => ($products->firstItem() ?? 1) + $i,
             'url' => route('catalog.show', $product->slug),
             'name' => $product->localizedName(),
         ];
+        if ($product->imageUrl()) {
+            $row['image'] = \App\Support\Seo::absolute($product->imageUrl());
+        }
+        $listItems[] = $row;
     }
 
     $schema = [

@@ -61,13 +61,42 @@ class Seo
         $url ??= url()->current();
         $parts = parse_url($url);
         parse_str($parts['query'] ?? '', $query);
-        $query['lang'] = $locale;
+        unset($query['lang']);
+        if ($locale !== 'ru') {
+            $query['lang'] = $locale;
+        }
 
         $base = ($parts['scheme'] ?? request()->getScheme()).'://'
             .($parts['host'] ?? request()->getHost())
             .(isset($parts['port']) ? ':'.$parts['port'] : '')
             .($parts['path'] ?? '/');
 
-        return $base.'?'.http_build_query($query);
+        $queryString = http_build_query($query);
+
+        return $base.($queryString !== '' ? '?'.$queryString : '');
+    }
+
+    /**
+     * Canonical URL for the current locale. The RO page lives at ?lang=ro and
+     * must point to itself; the RU (default) page keeps a clean URL.
+     */
+    public static function canonical(string $url): string
+    {
+        $parts = parse_url($url);
+        $query = [];
+        parse_str($parts['query'] ?? '', $query);
+        unset($query['lang']);
+
+        if (request()->query('lang') === 'ro') {
+            $query['lang'] = 'ro';
+        }
+
+        $base = ($parts['scheme'] ?? request()->getScheme()).'://'
+            .($parts['host'] ?? request()->getHost())
+            .(isset($parts['port']) ? ':'.$parts['port'] : '')
+            .($parts['path'] ?? '/');
+        $queryString = http_build_query($query);
+
+        return $base.($queryString !== '' ? '?'.$queryString : '');
     }
 }

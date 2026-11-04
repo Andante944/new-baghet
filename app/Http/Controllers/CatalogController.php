@@ -84,7 +84,17 @@ class CatalogController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
-        return view('catalog.show', compact('product'));
+        $related = Product::query()
+            ->active()
+            ->with('category')
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->orderByDesc('stock')
+            ->orderBy('sku')
+            ->limit(4)
+            ->get();
+
+        return view('catalog.show', compact('product', 'related'));
     }
 
     private function catalog(Request $request, string $slug): View

@@ -20,6 +20,15 @@
 @section('canonical', $productUrl)
 @section('og_type', 'product')
 @section('og_image', $product->imageUrl() ?: \App\Support\Seo::defaultImage())
+@section('product_price', number_format((float) $product->displayPrice(), 2, '.', ''))
+@section('product_currency', 'USD')
+@section('product_availability', $product->inStock() ? 'in stock' : 'out of stock')
+
+@push('head')
+    @if($product->imageUrl())
+        <link rel="preload" as="image" href="{{ $product->imageUrl() }}" fetchpriority="high">
+    @endif
+@endpush
 
 @section('jsonld')
 @include('partials.schema-breadcrumbs', ['breadcrumbs' => $breadcrumbs])
@@ -72,6 +81,7 @@
                     <span class="badge badge--off">{{ __('site.out_stock') }}</span>
                 @endif
             </div>
+            <h2 class="product-detail__h2">{{ __('site.specs_title') }}</h2>
             <ul class="spec-list">
                 <li><span>{{ __('site.sku') }}</span><strong>{{ $product->sku }}</strong></li>
                 @if($product->width)
@@ -90,6 +100,7 @@
             </ul>
             <p class="hint stock-note">{{ __('site.stock_note') }}</p>
             @if($product->descriptionHtml())
+                <h2 class="product-detail__h2">{{ __('site.description_title') }}</h2>
                 <div class="product-description">{!! $product->descriptionHtml() !!}</div>
             @endif
             @auth
@@ -109,4 +120,18 @@
         </div>
     </div>
 </div>
+
+@if($related->isNotEmpty())
+    <section class="section product-related">
+        <div class="section__head">
+            <h2>{{ __('site.related_title') }}</h2>
+            <p>{{ __('site.related_lead') }}</p>
+        </div>
+        <div class="product-grid">
+            @foreach($related as $relatedProduct)
+                @include('partials.product-card', ['product' => $relatedProduct])
+            @endforeach
+        </div>
+    </section>
+@endif
 @endsection

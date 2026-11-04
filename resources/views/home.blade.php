@@ -4,8 +4,19 @@
 @section('meta_description', __('site.seo_home_description'))
 @section('canonical', route('home'))
 
+@php
+    $faq = [
+        ['q' => __('site.faq_q1'), 'a' => __('site.faq_a1')],
+        ['q' => __('site.faq_q2'), 'a' => __('site.faq_a2')],
+        ['q' => __('site.faq_q3'), 'a' => __('site.faq_a3')],
+        ['q' => __('site.faq_q4'), 'a' => __('site.faq_a4')],
+        ['q' => __('site.faq_q5'), 'a' => __('site.faq_a5')],
+    ];
+@endphp
+
 @section('jsonld')
-@include('partials.schema-faq')
+@include('partials.schema-website')
+@include('partials.schema-faq', ['faq' => $faq])
 @endsection
 
 @section('content')
@@ -45,36 +56,30 @@
     </div>
 </section>
 
-<section class="section section--faq">
-    <div class="section__head">
-        <h2>{{ __('site.faq_title') }}</h2>
-        <p>{{ __('site.faq_lead') }}</p>
-    </div>
-    <div class="faq-list">
-        <details class="faq-item" open>
-            <summary>{{ __('site.faq_q1') }}</summary>
-            <p>{{ __('site.faq_a1') }}</p>
-        </details>
-        <details class="faq-item">
-            <summary>{{ __('site.faq_q2') }}</summary>
-            <p>{{ __('site.faq_a2') }}</p>
-        </details>
-    </div>
-</section>
-
 <section class="cta-band">
     <div class="cta-band__inner">
         <div>
             <h2>{{ __('site.cta_login') }}</h2>
             <p>{{ __('site.add_request_hint') }}</p>
         </div>
-        @guest
-            <a class="btn btn--primary" href="{{ route('login') }}">{{ __('site.nav_login') }}</a>
-        @else
-            <a class="btn btn--primary" href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}">
-                {{ auth()->user()->isAdmin() ? __('site.nav_admin') : __('site.nav_cabinet') }}
-            </a>
-        @endguest
+        <div class="cta-band__actions">
+            @guest
+                <a class="btn btn--primary" href="{{ route('login') }}">{{ __('site.nav_login') }}</a>
+            @else
+                <a class="btn btn--primary" href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : route('dashboard') }}">
+                    {{ auth()->user()->isAdmin() ? __('site.nav_admin') : __('site.nav_cabinet') }}
+                </a>
+            @endguest
+            <a class="btn btn--outline" href="{{ route('wholesale') }}">{{ __('site.cta_wholesale') }}</a>
+        </div>
     </div>
+</section>
+
+<section class="section section--faq" id="faq">
+    <div class="section__head">
+        <h2>{{ __('site.faq_title') }}</h2>
+        <p>{{ __('site.faq_lead') }}</p>
+    </div>
+    @include('partials.faq', ['faq' => $faq])
 </section>
 @endsection

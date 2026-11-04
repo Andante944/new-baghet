@@ -9,6 +9,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\WholesaleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,7 @@ Route::get('/hardware', [CatalogController::class, 'hardware'])->name('catalog.h
 Route::get('/search', [CatalogController::class, 'search'])->name('catalog.search');
 Route::get('/product/{slug}', [CatalogController::class, 'show'])->name('catalog.show');
 Route::get('/contacts', ContactController::class)->name('contacts');
+Route::get('/wholesale', WholesaleController::class)->name('wholesale');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
 

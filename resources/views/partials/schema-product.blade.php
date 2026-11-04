@@ -4,8 +4,13 @@
         '@type' => 'Product',
         'name' => $product->localizedName(),
         'sku' => $product->sku,
+        'mpn' => $product->sku,
+        'url' => route('catalog.show', $product->slug),
         'description' => trim(strip_tags((string) ($product->descriptionHtml() ?: $product->localizedName().' — Baghet'))),
-        'image' => array_values(array_filter([$product->imageUrl()])),
+        'image' => array_values(array_filter(array_map(
+            fn (?string $image) => $image ? \App\Support\Seo::absolute($image) : null,
+            [$product->imageUrl()],
+        ))),
         'brand' => [
             '@type' => 'Brand',
             'name' => 'Baghet',

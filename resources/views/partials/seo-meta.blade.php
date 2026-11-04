@@ -5,7 +5,7 @@
     $metaDescription = trim($__env->yieldContent('meta_description', __('site.seo_home_description')));
     $ogType = trim($__env->yieldContent('og_type', 'website'));
     $ogImage = trim($__env->yieldContent('og_image', Seo::defaultImage()));
-    $canonical = trim($__env->yieldContent('canonical', url()->current()));
+    $canonical = Seo::canonical(trim($__env->yieldContent('canonical', url()->current())));
     $robots = Seo::robots(trim($__env->yieldContent('robots')) ?: null);
     $isPrivate = Seo::isPrivateRoute();
 @endphp
@@ -28,6 +28,11 @@
 <meta property="og:description" content="{{ $metaDescription }}">
 <meta property="og:url" content="{{ $canonical }}">
 <meta property="og:image" content="{{ Seo::absolute($ogImage) }}">
+@if(trim($__env->yieldContent('product_price')) !== '')
+<meta property="product:price:amount" content="@yield('product_price')">
+<meta property="product:price:currency" content="@yield('product_currency', 'USD')">
+<meta property="product:availability" content="@yield('product_availability', 'in stock')">
+@endif
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ $pageTitle }}">
