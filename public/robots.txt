@@ -1,2 +1,11 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /login
+Disallow: /cabinet
+Disallow: /cart
+Disallow: /orders
+Disallow: /admin
+Disallow: /search
+Disallow: /locale/
+
+Sitemap: https://baghet.md/sitemap.xml
