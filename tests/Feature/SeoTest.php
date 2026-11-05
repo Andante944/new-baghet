@@ -25,7 +25,9 @@ class SeoTest extends TestCase
             ->assertSee('LocalBusiness', false)
             ->assertSee('WebSite', false)
             ->assertSee('SearchAction', false)
-            ->assertSee('Оптовым покупателям', false);
+            ->assertSee('Оптовым покупателям', false)
+            ->assertSee('site-notice', false)
+            ->assertSee('Главная');
     }
 
     public function test_wholesale_page_has_content_faq_and_schema(): void

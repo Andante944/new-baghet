@@ -30,8 +30,6 @@
             <span class="price">{{ number_format($product->displayPrice(), 2) }} $</span>
             <span class="unit">
                 {{ $catSlug === 'plastic' ? __('site.price_m') : __('site.price_pack') }}
-                @guest · {{ __('site.price_retail_short') }}@endguest
-                @auth · {{ __('site.price_wholesale_short') }}@endauth
             </span>
         </div>
     </div>

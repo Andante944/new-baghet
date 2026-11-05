@@ -28,17 +28,22 @@
     @endif
 </head>
 <body>
+<div class="site-notice" role="status">
+    <div class="site-notice__inner">
+        <strong>{{ __('site.site_notice_title') }}</strong>
+        <span>{{ __('site.site_notice_text') }}</span>
+        <a class="site-notice__link" href="{{ route('contacts') }}">{{ __('site.site_notice_link') }}</a>
+    </div>
+</div>
 <header class="site-header">
     <div class="site-header__inner">
         <a class="logo" href="{{ route('home') }}">
             <img class="logo__img" src="{{ asset('images/logo.svg') }}?v=3" alt="Baghet" width="200" height="76">
         </a>
         <nav class="nav" data-nav>
-            <a href="{{ route('home') }}" @class(['is-active' => request()->routeIs('home')])>Baghet</a>
+            <a href="{{ route('home') }}" @class(['is-active' => request()->routeIs('home')])>{{ __('site.nav_home') }}</a>
             <a href="{{ route('catalog.plastic') }}" @class(['is-active' => request()->routeIs('catalog.plastic')])>{{ __('site.nav_plastic') }}</a>
             <a href="{{ route('catalog.hardware') }}" @class(['is-active' => request()->routeIs('catalog.hardware')])>{{ __('site.nav_hardware') }}</a>
-            <a href="{{ route('wholesale') }}" @class(['is-active' => request()->routeIs('wholesale')])>{{ __('site.nav_wholesale') }}</a>
-            <a href="{{ route('contacts') }}" @class(['is-active' => request()->routeIs('contacts')])>{{ __('site.nav_contacts') }}</a>
             @auth
                 @if(auth()->user()->isAdmin())
                     <a href="{{ route('admin.dashboard') }}" @class(['is-active' => request()->routeIs('admin.*')])>{{ __('site.nav_admin') }}</a>

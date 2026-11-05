@@ -2083,3 +2083,42 @@ input {
     height: auto;
   }
 }
+/* ---------- Top work notice ---------- */
+.site-notice {
+  background: var(--ink);
+  border-bottom: 2px solid var(--brass);
+  color: var(--paper);
+  font-size: 0.86rem;
+}
+.site-notice__inner {
+  width: min(100% - 2rem, var(--max));
+  margin-inline: auto;
+  padding: 0.6rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  line-height: 1.45;
+}
+.site-notice strong {
+  color: #fff;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.site-notice__link {
+  margin-left: auto;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .site-notice__inner {
+    padding: 0.7rem 0;
+  }
+  .site-notice__link {
+    margin-left: 0;
+  }
+}
