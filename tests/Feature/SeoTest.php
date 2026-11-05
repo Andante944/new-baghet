@@ -103,7 +103,12 @@ class SeoTest extends TestCase
             ->assertSee('BreadcrumbList', false)
             ->assertSee('product:price:amount', false)
             ->assertSee('100-01-02')
-            ->assertSee('Похожие товары');
+            ->assertSee('Похожие товары')
+            ->assertSee('Опт — по запросу');
+        $this->assertStringContainsString(
+            'wholesale-request',
+            (string) $this->get(route('catalog.show', '100-01-01-seo'))->getContent()
+        );
     }
 
     public function test_private_pages_are_noindex(): void

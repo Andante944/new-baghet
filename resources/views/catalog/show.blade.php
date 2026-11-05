@@ -85,7 +85,21 @@
                 @else
                     <span class="badge badge--off">{{ __('site.out_stock') }}</span>
                 @endif
+                @guest
+                    <a class="price-badge price-badge--link" href="{{ route('contacts') }}">{{ __('site.opt_on_request_short') }}</a>
+                @else
+                    <span class="price-badge price-badge--auth">{{ __('site.opt_price_short') }}</span>
+                @endguest
             </div>
+            @guest
+                <div class="wholesale-request">
+                    <div>
+                        <strong>{{ __('site.opt_request_title') }}</strong>
+                        <p>{{ __('site.opt_request_text') }}</p>
+                    </div>
+                    <a class="btn btn--outline btn--sm" href="{{ route('contacts') }}">{{ __('site.opt_request_cta') }}</a>
+                </div>
+            @endguest
             <h2 class="product-detail__h2">{{ __('site.specs_title') }}</h2>
             <ul class="spec-list">
                 <li><span>{{ __('site.sku') }}</span><strong>{{ $product->sku }}</strong></li>

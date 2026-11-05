@@ -2122,3 +2122,57 @@ input {
     margin-left: 0;
   }
 }
+/* ---------- Wholesale request cue next to price ---------- */
+.price-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.18rem 0.52rem;
+  border: 1px solid var(--brass);
+  border-radius: 999px;
+  background: rgba(176, 141, 87, 0.08);
+  color: var(--brass-deep);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.price-badge--link:hover {
+  background: var(--brass);
+  color: #fff;
+}
+.price-badge--auth {
+  border-color: var(--line);
+  background: var(--paper-2);
+  color: var(--ink-soft);
+}
+.wholesale-request {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--brass);
+  background: #fffaf0;
+}
+.wholesale-request strong {
+  display: block;
+  font-size: 0.95rem;
+}
+.wholesale-request p {
+  margin: 0.25rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+@media (max-width: 640px) {
+  .wholesale-request {
+    align-items: flex-start;
+  }
+}
+.product-meta__bottom .price-badge {
+  margin-left: auto;
+}

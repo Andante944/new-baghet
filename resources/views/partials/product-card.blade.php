@@ -31,6 +31,11 @@
             <span class="unit">
                 {{ $catSlug === 'plastic' ? __('site.price_m') : __('site.price_pack') }}
             </span>
+            @guest
+                <span class="price-badge">{{ __('site.opt_on_request_short') }}</span>
+            @else
+                <span class="price-badge price-badge--auth">{{ __('site.opt_price_short') }}</span>
+            @endguest
         </div>
     </div>
 </a>

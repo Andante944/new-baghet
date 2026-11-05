@@ -114,9 +114,15 @@ class Product extends Model
         return (float) $this->price;
     }
 
-    /** CRM sale price per meter; the same for guests and signed-in clients. */
+    /** Guest retail = wholesale + 30% */
+    public function retailPrice(): float
+    {
+        return round($this->wholesalePrice() * 1.3, 2);
+    }
+
+    /** Retail for guests, wholesale for signed-in clients. */
     public function displayPrice(): float
     {
-        return $this->wholesalePrice();
+        return auth()->check() ? $this->wholesalePrice() : $this->retailPrice();
     }
 }

@@ -38,7 +38,7 @@ class CustomerPortalTest extends TestCase
         $this->getJson(route('catalog.search', ['q' => '100-01']))
             ->assertOk()
             ->assertJsonPath('products.0.sku', '100-01-01')
-            ->assertJsonPath('products.0.price', '10.00');
+            ->assertJsonPath('products.0.price', '13.00');
     }
 
     public function test_admin_can_log_in_and_create_a_client(): void
