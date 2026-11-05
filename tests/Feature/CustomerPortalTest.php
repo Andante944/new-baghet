@@ -41,6 +41,36 @@ class CustomerPortalTest extends TestCase
             ->assertJsonPath('products.0.price', '13.00');
     }
 
+    public function test_signed_in_client_sees_wholesale_price_in_public_catalog(): void
+    {
+        $category = Category::query()->create([
+            'slug' => 'plastic',
+            'name_ru' => 'Пластиковый багет',
+            'name_ro' => 'Baghetă plastic',
+        ]);
+        Product::query()->create([
+            'category_id' => $category->id,
+            'sku' => '300-03-03',
+            'slug' => '300-03-03-wholesale',
+            'name_ru' => 'Пластиковый багет: 300-03-03',
+            'price' => 10,
+            'stock' => 5,
+            'is_active' => true,
+        ]);
+
+        $client = User::factory()->create(['role' => 'client', 'is_active' => true]);
+
+        $this->actingAs($client)
+            ->getJson(route('catalog.search', ['q' => '300-03-03']))
+            ->assertOk()
+            ->assertJsonPath('products.0.price', '10.00');
+
+        $this->actingAs($client)
+            ->get(route('catalog.show', '300-03-03-wholesale'))
+            ->assertOk()
+            ->assertSee('10.00 $');
+    }
+
     public function test_admin_can_log_in_and_create_a_client(): void
     {
         $admin = User::factory()->create([
