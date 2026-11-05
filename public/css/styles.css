@@ -2176,3 +2176,22 @@ input {
 .product-meta__bottom .price-badge {
   margin-left: auto;
 }
+/* ---------- Related products: family-based, adaptive ---------- */
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+.product-related .section__head {
+  margin-bottom: 1.25rem;
+}
+@media (max-width: 1100px) {
+  .related-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .related-grid {
+    grid-template-columns: 1fr;
+  }
+}

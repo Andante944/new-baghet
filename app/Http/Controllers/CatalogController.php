@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -84,17 +85,75 @@ class CatalogController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
-        $related = Product::query()
+        $related = $this->relatedProducts($product);
+
+        return view('catalog.show', compact('product', 'related'));
+    }
+
+    /**
+     * Similar products by SKU family: 20-02-* first, then the whole 20-* width
+     * group, then the category as a last resort. Hardware and items without a
+     * numeric article simply fall back to their category.
+     *
+     * @return Collection<int, Product>
+     */
+    private function relatedProducts(Product $product, int $limit = 4): Collection
+    {
+        $base = Product::query()
             ->active()
             ->with('category')
             ->where('category_id', $product->category_id)
-            ->where('id', '!=', $product->id)
-            ->orderByDesc('stock')
-            ->orderBy('sku')
-            ->limit(4)
-            ->get();
+            ->where('id', '!=', $product->id);
 
-        return view('catalog.show', compact('product', 'related'));
+        $picked = new Collection;
+
+        foreach ($this->skuPrefixPatterns($product->sku) as $pattern) {
+            if ($picked->count() >= $limit) {
+                break;
+            }
+
+            $rows = (clone $base)
+                ->where('sku', 'like', $pattern)
+                ->orderByDesc('stock')
+                ->orderBy('sku')
+                ->limit($limit * 2)
+                ->get();
+
+            $picked = $picked
+                ->merge($rows)
+                ->unique(fn (Product $row) => mb_strtolower((string) $row->sku))
+                ->take($limit)
+                ->values();
+        }
+
+        if ($picked->isEmpty()) {
+            $picked = (clone $base)
+                ->orderByDesc('stock')
+                ->orderBy('sku')
+                ->limit($limit)
+                ->get();
+        }
+
+        return $picked->values();
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function skuPrefixPatterns(?string $sku): array
+    {
+        $sku = trim((string) $sku);
+        if (preg_match('/^(\d+)(?:-(\d+))?/', $sku, $matches) !== 1) {
+            return [];
+        }
+
+        $patterns = [];
+        if (isset($matches[2]) && $matches[2] !== '') {
+            $patterns[] = $matches[1].'-'.$matches[2].'%';
+        }
+        $patterns[] = $matches[1].'-%';
+
+        return $patterns;
     }
 
     private function catalog(Request $request, string $slug): View

@@ -146,7 +146,7 @@
             <h2>{{ __('site.related_title') }}</h2>
             <p>{{ __('site.related_lead') }}</p>
         </div>
-        <div class="product-grid">
+        <div class="related-grid">
             @foreach($related as $relatedProduct)
                 @include('partials.product-card', ['product' => $relatedProduct])
             @endforeach
