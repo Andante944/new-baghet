@@ -1972,3 +1972,114 @@ input {
     flex-direction: column;
   }
 }
+/* ---------- Admin: products & images ---------- */
+.account-head__actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.admin-thumb img {
+  width: 72px;
+  height: 54px;
+  object-fit: contain;
+  padding: 4px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+.admin-products-table code {
+  font-size: 0.82rem;
+}
+.admin-row-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+.admin-product-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.admin-product-head h1 {
+  margin: 0.1rem 0 0.3rem;
+  font-family: var(--font-display);
+  font-weight: 560;
+}
+.admin-product-image {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+.admin-product-image img {
+  width: 180px;
+  height: 140px;
+  object-fit: contain;
+  background: var(--paper);
+}
+.admin-product-image__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.admin-product-image__meta code {
+  word-break: break-all;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+.admin-note {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--brass);
+  background: #fffaf0;
+}
+.admin-note--soft {
+  border-left-color: var(--line);
+  background: var(--paper-2);
+}
+.admin-note p {
+  margin: 0.3rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+.admin-product-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+.admin-product-meta span {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.admin-product-meta strong,
+.admin-product-meta code {
+  display: block;
+  margin-top: 0.2rem;
+}
+.admin-edit-link {
+  display: inline-block;
+  margin-top: 0.4rem;
+  color: var(--brass-deep);
+  font-size: 0.85rem;
+}
+@media (max-width: 640px) {
+  .admin-product-image {
+    flex-direction: column;
+  }
+  .admin-product-image img {
+    width: 100%;
+    height: auto;
+  }
+}

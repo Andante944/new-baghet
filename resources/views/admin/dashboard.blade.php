@@ -9,13 +9,20 @@
             <p class="eyebrow">{{ __('site.nav_admin') }}</p>
             <h1>{{ __('site.admin_title') }}</h1>
         </div>
-        <a class="btn btn--primary" href="{{ route('admin.clients.create') }}">{{ __('site.client_add') }}</a>
+        <div class="account-head__actions">
+            <a class="btn btn--outline" href="{{ route('admin.products.index') }}">{{ __('site.admin_products_title') }}</a>
+            <a class="btn btn--primary" href="{{ route('admin.clients.create') }}">{{ __('site.client_add') }}</a>
+        </div>
     </div>
 
     <div class="stats-grid">
         <div class="stat-card"><strong>{{ $clientCount }}</strong><span>{{ __('site.clients') }}</span></div>
         <div class="stat-card"><strong>{{ $orderCount }}</strong><span>{{ __('site.orders') }}</span></div>
         <div class="stat-card"><strong>{{ $newOrderCount }}</strong><span>{{ __('site.orders_new') }}</span></div>
+        <a class="stat-card" href="{{ route('admin.products.index', ['image' => 'missing']) }}">
+            <strong>{{ $missingImageCount }}</strong>
+            <span>{{ __('site.admin_products_missing_image') }}</span>
+        </a>
     </div>
 
     <div class="panel">

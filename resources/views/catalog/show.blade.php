@@ -72,6 +72,11 @@
         <div class="product-detail__info">
             <p class="eyebrow">{{ $product->category->localizedName() }}</p>
             <h1>{{ $product->localizedName() }}</h1>
+            @if(auth()->user()?->isAdmin())
+                <a class="admin-edit-link" href="{{ route('admin.products.edit', $product) }}">
+                    {{ __('site.admin_product_edit') }}
+                </a>
+            @endif
             <div class="product-detail__price-row">
                 <span class="price price--lg">{{ number_format($product->displayPrice(), 2) }} $</span>
                 <span class="unit">{{ $product->category->slug === 'plastic' ? __('site.price_m') : __('site.price_pack') }}</span>
