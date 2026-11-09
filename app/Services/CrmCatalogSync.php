@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -163,6 +164,8 @@ class CrmCatalogSync
 
             $stats['created']++;
         }
+
+        Cache::forget('sitemap.xml');
 
         return $stats;
     }

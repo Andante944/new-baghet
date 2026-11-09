@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -86,6 +87,8 @@ class ProductController extends Controller
             $this->deleteLocalImage($oldImage);
         }
 
+        Cache::forget('sitemap.xml');
+
         return redirect()
             ->route('admin.products.edit', $product)
             ->with('success', __('site.admin_product_saved'));
@@ -98,6 +101,7 @@ class ProductController extends Controller
         $product->save();
 
         $this->deleteLocalImage($oldImage);
+        Cache::forget('sitemap.xml');
 
         return redirect()
             ->route('admin.products.edit', $product)

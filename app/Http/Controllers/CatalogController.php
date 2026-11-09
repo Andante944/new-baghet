@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -77,17 +78,55 @@ class CatalogController extends Controller
         return view('catalog.search', compact('products', 'term'));
     }
 
-    public function show(string $slug): View
+    public function show(string $slug): View|RedirectResponse
     {
         $product = Product::query()
             ->active()
             ->with('category')
             ->where('slug', $slug)
-            ->firstOrFail();
+            ->first();
+
+        if ($product === null) {
+            $inactive = Product::query()->with('category')->where('slug', $slug)->first();
+            if ($inactive !== null) {
+                return redirect()->route(
+                    $inactive->category?->slug === 'hardware' ? 'catalog.hardware' : 'catalog.plastic',
+                    [],
+                    301,
+                );
+            }
+
+            abort(404);
+        }
+
+        $canonical = $this->canonicalProduct($product);
+        if ($canonical->id !== $product->id) {
+            return redirect()->route('catalog.show', $canonical->slug, 301);
+        }
 
         $related = $this->relatedProducts($product);
 
         return view('catalog.show', compact('product', 'related'));
+    }
+
+    /**
+     * One page per SKU: when imports left duplicate cards, the CRM-bound card
+     * wins, then the one with a photo, then the oldest id.
+     */
+    private function canonicalProduct(Product $product): Product
+    {
+        $sku = trim((string) $product->sku);
+        if ($sku === '') {
+            return $product;
+        }
+
+        return Product::query()
+            ->active()
+            ->where('sku', $sku)
+            ->orderByRaw('CASE WHEN crm_product_id IS NULL THEN 1 ELSE 0 END')
+            ->orderByRaw("CASE WHEN image_path IS NULL OR image_path = '' THEN 1 ELSE 0 END")
+            ->orderBy('id')
+            ->first() ?? $product;
     }
 
     /**
