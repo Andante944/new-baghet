@@ -123,7 +123,7 @@ class LegacySeoTest extends TestCase
 
         $this->get('/ru/contact')->assertStatus(301)->assertRedirect(route('contacts'));
         $this->get('/ru/content/7-optovym-pokupatelyam')->assertStatus(301)->assertRedirect(route('wholesale'));
-        $this->get('/ru/')->assertStatus(301)->assertRedirect(route('home'));
+        $this->get('/ru/')->assertStatus(301)->assertRedirect(rtrim(route('home'), '/').'/');
     }
 
     private function category(): Category

@@ -15,7 +15,7 @@ class SitemapController extends Controller
             $urls = [];
             $hasImages = false;
 
-            $urls[] = $this->url(route('home'), now(), 'daily', '1.0');
+            $urls[] = $this->url(rtrim(route('home'), '/').'/', now(), 'daily', '1.0');
             $urls[] = $this->url(route('catalog.plastic'), now(), 'daily', '0.9');
             $urls[] = $this->url(route('catalog.hardware'), now(), 'daily', '0.9');
             $urls[] = $this->url(route('wholesale'), now(), 'monthly', '0.8');

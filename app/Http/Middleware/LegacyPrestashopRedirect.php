@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -17,6 +18,12 @@ class LegacyPrestashopRedirect
 {
     public function handle(Request $request, Closure $next): Response
     {
+        // A request to the physical /index.php pollutes the URL generator root
+        // with "…/index.php"; keep redirects on the clean canonical host.
+        if (str_contains($request->path(), 'index.php')) {
+            URL::forceRootUrl(rtrim((string) config('app.url'), '/'));
+        }
+
         $controller = strtolower(trim((string) $request->query('controller', '')));
 
         if ($controller === 'product') {
@@ -26,7 +33,7 @@ class LegacyPrestashopRedirect
                 : null;
 
             if ($product === null) {
-                return redirect()->route('home', [], 301);
+                return redirect()->to(rtrim(route('home'), '/').'/', 301);
             }
 
             if ($product->is_active) {
@@ -46,15 +53,19 @@ class LegacyPrestashopRedirect
                 ? Category::query()->where('prestashop_id', $prestashopId)->first()
                 : null;
 
+            if ($category === null || ! in_array($category->slug, ['plastic', 'hardware'], true)) {
+                return redirect()->to(rtrim(route('home'), '/').'/', 301);
+            }
+
             return redirect()->route(
-                $category?->slug === 'hardware' ? 'catalog.hardware' : ($category?->slug === 'plastic' ? 'catalog.plastic' : 'home'),
+                $category->slug === 'hardware' ? 'catalog.hardware' : 'catalog.plastic',
                 [],
                 301,
             );
         }
 
         if ($controller !== '') {
-            return redirect()->route('home', [], 301);
+            return redirect()->to(rtrim(route('home'), '/').'/', 301);
         }
 
         $path = trim((string) $request->path(), '/');
@@ -100,6 +111,10 @@ class LegacyPrestashopRedirect
             preg_match('#^16-#', $normalized) === 1 => 'catalog.hardware',
             default => 'home',
         };
+
+        if ($route === 'home') {
+            return redirect()->to(rtrim(route('home'), '/').'/', 301);
+        }
 
         return redirect()->route($route, [], 301);
     }
