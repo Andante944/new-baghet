@@ -20,9 +20,7 @@ class LegacyPrestashopRedirect
     {
         // A request to the physical /index.php pollutes the URL generator root
         // with "…/index.php"; keep redirects on the clean canonical host.
-        if (str_contains($request->path(), 'index.php')) {
-            URL::forceRootUrl(rtrim((string) config('app.url'), '/'));
-        }
+        URL::forceRootUrl(rtrim((string) config('app.url'), '/'));
 
         $controller = strtolower(trim((string) $request->query('controller', '')));
 
