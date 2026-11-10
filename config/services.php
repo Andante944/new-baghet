@@ -40,6 +40,7 @@ return [
     'crm' => [
         'catalog_url' => env('CRM_CATALOG_URL'),
         'companies_url' => env('CRM_COMPANIES_URL'),
+        'companies_business' => env('CRM_COMPANIES_BUSINESS', 'etichete'),
         'catalog_token' => env('CRM_CATALOG_TOKEN'),
         'sync_token' => env('CRM_SYNC_TOKEN'),
     ],

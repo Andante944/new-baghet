@@ -107,7 +107,7 @@ class AdminClientTest extends TestCase
     {
         Cache::flush();
         Http::fake([
-            'https://crm.test/api/bagheta/companies' => Http::response([
+            'https://crm.test/api/bagheta/companies*' => Http::response([
                 'companies' => [
                     ['id' => 42, 'name' => 'SRL Linked', 'contact_person' => 'Linked', 'email' => null, 'phone' => null],
                     ['id' => 43, 'name' => 'SRL Free', 'contact_person' => 'Free', 'email' => 'free@example.com', 'phone' => '+37360000001'],
@@ -142,7 +142,7 @@ class AdminClientTest extends TestCase
     {
         Cache::flush();
         Http::fake([
-            'https://crm.test/api/bagheta/companies' => Http::response([
+            'https://crm.test/api/bagheta/companies*' => Http::response([
                 'companies' => [
                     [
                         'id' => 42,
@@ -169,6 +169,8 @@ class AdminClientTest extends TestCase
             ->assertOk()
             ->assertSee('SRL CRM');
 
+        Http::assertSent(fn ($request): bool => str_contains($request->url(), 'business=etichete'));
+
         $this->actingAs($admin)
             ->post(route('admin.clients.store'), [
                 'name' => 'Ion Popescu',
@@ -186,7 +188,7 @@ class AdminClientTest extends TestCase
     {
         Cache::flush();
         Http::fake([
-            'https://crm.test/api/bagheta/companies' => Http::response([
+            'https://crm.test/api/bagheta/companies*' => Http::response([
                 'companies' => [
                     ['id' => 42, 'name' => 'SRL CRM', 'business_name' => 'Bagheta'],
                 ],
@@ -221,7 +223,7 @@ class AdminClientTest extends TestCase
         Cache::flush();
         Storage::fake('local');
         Http::fake([
-            'https://crm.test/api/bagheta/companies' => Http::response([
+            'https://crm.test/api/bagheta/companies*' => Http::response([
                 'companies' => [
                     ['id' => 42, 'name' => 'SRL CRM', 'business_name' => 'Bagheta'],
                     ['id' => 43, 'name' => 'SRL CRM 2', 'business_name' => 'Bagheta'],

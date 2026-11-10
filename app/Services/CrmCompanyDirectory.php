@@ -13,23 +13,26 @@ use Throwable;
  */
 class CrmCompanyDirectory
 {
-    private const CACHE_KEY = 'crm-client-companies';
-
     /**
      * @return list<array{id: int, business: ?string, business_name: ?string, name: string, contact_person: ?string, email: ?string, phone: ?string, locale: ?string}>
      */
     public function all(): array
     {
-        $cached = Cache::get(self::CACHE_KEY);
+        $cached = Cache::get($this->cacheKey());
         if (is_array($cached)) {
             return $cached;
         }
 
         $url = (string) config('services.crm.companies_url');
         $token = (string) config('services.crm.catalog_token');
+        $business = $this->business();
 
         if ($url === '') {
             return [];
+        }
+
+        if ($business !== '') {
+            $url .= (str_contains($url, '?') ? '&' : '?').'business='.urlencode($business);
         }
 
         try {
@@ -71,7 +74,7 @@ class CrmCompanyDirectory
             }
 
             if ($companies !== []) {
-                Cache::put(self::CACHE_KEY, $companies, now()->addMinutes(5));
+                Cache::put($this->cacheKey(), $companies, now()->addMinutes(5));
             }
 
             return $companies;
@@ -98,6 +101,16 @@ class CrmCompanyDirectory
 
     public function forget(): void
     {
-        Cache::forget(self::CACHE_KEY);
+        Cache::forget($this->cacheKey());
+    }
+
+    private function business(): string
+    {
+        return trim((string) config('services.crm.companies_business'));
+    }
+
+    private function cacheKey(): string
+    {
+        return 'crm-client-companies:'.($this->business() !== '' ? $this->business() : 'all');
     }
 }
