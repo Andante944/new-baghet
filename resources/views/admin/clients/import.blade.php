@@ -34,6 +34,7 @@
             <div class="form-actions">
                 <button class="btn btn--primary" type="submit">{{ __('site.client_import_submit') }}</button>
                 <a class="btn btn--outline" href="{{ route('admin.clients.import.template') }}">{{ __('site.client_import_template') }}</a>
+                <a class="btn btn--outline" href="{{ route('admin.clients.import.crm-template') }}">{{ __('site.client_import_crm_template') }}</a>
                 <a class="btn btn--outline" href="{{ route('admin.clients.index') }}">{{ __('site.cancel') }}</a>
             </div>
         </form>

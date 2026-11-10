@@ -252,6 +252,41 @@ class ClientController extends Controller
         ]);
     }
 
+    public function importCrmTemplate(CrmCompanyDirectory $directory): StreamedResponse
+    {
+        $linked = User::query()
+            ->whereNotNull('crm_company_id')
+            ->pluck('crm_company_id')
+            ->map(fn ($id): int => (int) $id)
+            ->all();
+
+        $companies = array_values(array_filter(
+            $directory->all(),
+            fn (array $company): bool => ! in_array($company['id'], $linked, true),
+        ));
+
+        return response()->streamDownload(function () use ($companies): void {
+            echo "\xEF\xBB\xBF";
+            echo "company_name;name;email;phone;crm_company_id\n";
+
+            foreach ($companies as $company) {
+                $cells = array_map(
+                    fn (string $value): string => '"'.str_replace('"', '""', $value).'"',
+                    [
+                        $company['name'],
+                        $company['contact_person'] ?: $company['name'],
+                        $company['email'] ?? '',
+                        $company['phone'] ?? '',
+                        (string) $company['id'],
+                    ],
+                );
+                echo implode(';', $cells)."\n";
+            }
+        }, 'crm-companies.csv', [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
+    }
+
     public function downloadImport(string $token): StreamedResponse
     {
         abort_unless(preg_match('/^[A-Za-z0-9]{32}$/', $token) === 1, 404);

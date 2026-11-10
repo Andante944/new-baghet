@@ -138,6 +138,7 @@ return [
     'client_import_rows' => 'Sau lipiți rândurile',
     'client_import_submit' => 'Importă',
     'client_import_template' => 'Descarcă modelul',
+    'client_import_crm_template' => 'Descarcă companiile din CRM',
     'client_import_columns' => 'Coloane: company_name; name; email; phone; password; bitrix_contact_id; bitrix_company_id; crm_company_id. Obligatorii: name și email. Separator — ; sau ,.',
     'client_crm_company' => 'Companie în CRM',
     'client_crm_none' => '— fără legătură cu CRM —',

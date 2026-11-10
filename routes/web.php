@@ -59,6 +59,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('clients/import', [ClientController::class, 'importForm'])->name('clients.import');
     Route::post('clients/import', [ClientController::class, 'import'])->name('clients.import.store');
     Route::get('clients/import/template', [ClientController::class, 'importTemplate'])->name('clients.import.template');
+    Route::get('clients/import/crm-template', [ClientController::class, 'importCrmTemplate'])->name('clients.import.crm-template');
     Route::get('clients/import/{token}/download', [ClientController::class, 'downloadImport'])->name('clients.import.download');
     Route::resource('clients', ClientController::class)->except(['show', 'destroy']);
     Route::get('products', [AdminProductController::class, 'index'])->name('products.index');

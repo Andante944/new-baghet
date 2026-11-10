@@ -138,6 +138,7 @@ return [
     'client_import_rows' => 'Или вставьте строки',
     'client_import_submit' => 'Импортировать',
     'client_import_template' => 'Скачать шаблон',
+    'client_import_crm_template' => 'Скачать компании из CRM',
     'client_import_columns' => 'Колонки: company_name; name; email; phone; password; bitrix_contact_id; bitrix_company_id; crm_company_id. Обязательны name и email. Разделитель — ; или ,.',
     'client_crm_company' => 'Компания в CRM',
     'client_crm_none' => '— не привязывать к CRM —',

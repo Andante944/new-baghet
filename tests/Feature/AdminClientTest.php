@@ -103,6 +103,41 @@ class AdminClientTest extends TestCase
             ->assertDownload('client-import-template.csv');
     }
 
+    public function test_crm_template_lists_unlinked_companies(): void
+    {
+        Cache::flush();
+        Http::fake([
+            'https://crm.test/api/bagheta/companies' => Http::response([
+                'companies' => [
+                    ['id' => 42, 'name' => 'SRL Linked', 'contact_person' => 'Linked', 'email' => null, 'phone' => null],
+                    ['id' => 43, 'name' => 'SRL Free', 'contact_person' => 'Free', 'email' => 'free@example.com', 'phone' => '+37360000001'],
+                ],
+            ]),
+        ]);
+        config([
+            'services.crm.companies_url' => 'https://crm.test/api/bagheta/companies',
+            'services.crm.catalog_token' => 'secret-token',
+        ]);
+
+        User::query()->create([
+            'name' => 'Linked',
+            'email' => 'linked@example.com',
+            'password' => 'Password123',
+            'role' => 'client',
+            'crm_company_id' => 42,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($this->admin())
+            ->get(route('admin.clients.import.crm-template'))
+            ->assertOk();
+
+        $content = $response->streamedContent();
+        $this->assertStringContainsString('SRL Free', $content);
+        $this->assertStringContainsString('"43"', $content);
+        $this->assertStringNotContainsString('SRL Linked', $content);
+    }
+
     public function test_admin_can_link_client_to_crm_company(): void
     {
         Cache::flush();
