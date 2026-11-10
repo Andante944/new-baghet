@@ -169,7 +169,7 @@ class AdminClientTest extends TestCase
             ->assertOk()
             ->assertSee('SRL CRM');
 
-        Http::assertSent(fn ($request): bool => str_contains($request->url(), 'business=etichete'));
+        Http::assertSent(fn ($request): bool => str_contains($request->url(), 'business=bagheta'));
 
         $this->actingAs($admin)
             ->post(route('admin.clients.store'), [
