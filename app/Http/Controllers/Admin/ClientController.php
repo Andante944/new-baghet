@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\CrmCompanyDirectory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -35,14 +36,18 @@ class ClientController extends Controller
         return view('admin.clients.index', compact('clients'));
     }
 
-    public function create(): View
+    public function create(CrmCompanyDirectory $directory): View
     {
-        return view('admin.clients.form', ['client' => new User]);
+        return view('admin.clients.form', [
+            'client' => new User,
+            'crmCompanies' => $directory->all(),
+        ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, CrmCompanyDirectory $directory): RedirectResponse
     {
         $data = $this->validated($request);
+        $this->ensureCrmCompanyExists($data['crm_company_id'] ?? null, $directory);
         $data['role'] = 'client';
         $data['is_active'] = $request->boolean('is_active');
 
@@ -67,18 +72,22 @@ class ClientController extends Controller
         return $redirect;
     }
 
-    public function edit(User $client): View
+    public function edit(User $client, CrmCompanyDirectory $directory): View
     {
         abort_unless($client->role === 'client', 404);
 
-        return view('admin.clients.form', compact('client'));
+        return view('admin.clients.form', [
+            'client' => $client,
+            'crmCompanies' => $directory->all(),
+        ]);
     }
 
-    public function update(Request $request, User $client): RedirectResponse
+    public function update(Request $request, User $client, CrmCompanyDirectory $directory): RedirectResponse
     {
         abort_unless($client->role === 'client', 404);
 
         $data = $this->validated($request, $client);
+        $this->ensureCrmCompanyExists($data['crm_company_id'] ?? null, $directory, $client);
         if (blank($data['password'] ?? null)) {
             unset($data['password']);
         }
@@ -94,7 +103,7 @@ class ClientController extends Controller
         return view('admin.clients.import');
     }
 
-    public function import(Request $request): View
+    public function import(Request $request, CrmCompanyDirectory $directory): View
     {
         $request->validate([
             'file' => ['nullable', 'file', 'mimes:csv,txt', 'max:5120'],
@@ -126,6 +135,8 @@ class ClientController extends Controller
         $skipped = [];
         $errors = [];
         $seen = [];
+        $crmCompanies = $directory->all();
+        $crmIds = array_column($crmCompanies, 'id');
 
         foreach ($rows as $index => $row) {
             $line = $index + $firstLine;
@@ -140,6 +151,7 @@ class ClientController extends Controller
             $password = $value('password');
             $bitrixContact = $value('bitrix_contact_id');
             $bitrixCompany = $value('bitrix_company_id');
+            $crmCompany = $value('crm_company_id');
 
             if ($name === '') {
                 $errors[] = __('site.client_import_line', ['line' => $line]).': '.__('site.client_import_no_name');
@@ -172,6 +184,20 @@ class ClientController extends Controller
                 continue;
             }
 
+            if ($crmCompany !== '') {
+                if (! ctype_digit($crmCompany) || ($crmIds !== [] && ! in_array((int) $crmCompany, $crmIds, true))) {
+                    $errors[] = __('site.client_import_line', ['line' => $line]).': '.__('site.client_import_bad_crm_company');
+
+                    continue;
+                }
+
+                if (User::query()->where('crm_company_id', (int) $crmCompany)->exists()) {
+                    $skipped[] = $email.' — '.__('site.client_import_crm_exists');
+
+                    continue;
+                }
+            }
+
             $password = $password !== '' ? $password : Str::random(10);
 
             User::query()->create([
@@ -183,6 +209,7 @@ class ClientController extends Controller
                 'password' => $password,
                 'bitrix_contact_id' => $bitrixContact !== '' ? (int) $bitrixContact : null,
                 'bitrix_company_id' => $bitrixCompany !== '' ? (int) $bitrixCompany : null,
+                'crm_company_id' => $crmCompany !== '' ? (int) $crmCompany : null,
                 'is_active' => true,
             ]);
 
@@ -193,6 +220,7 @@ class ClientController extends Controller
                 'email' => $email,
                 'phone' => $phone,
                 'password' => $password,
+                'crm_company_id' => $crmCompany,
             ];
         }
 
@@ -217,8 +245,8 @@ class ClientController extends Controller
     {
         return response()->streamDownload(function (): void {
             echo "\xEF\xBB\xBF";
-            echo "company_name;name;email;phone;password;bitrix_contact_id;bitrix_company_id\n";
-            echo "SRL Exemplu;Ion Popescu;ion@example.com;+37360000000;;;\n";
+            echo "company_name;name;email;phone;password;bitrix_contact_id;bitrix_company_id;crm_company_id\n";
+            echo "SRL Exemplu;Ion Popescu;ion@example.com;+37360000000;;;;\n";
         }, 'client-import-template.csv', [
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
@@ -240,7 +268,7 @@ class ClientController extends Controller
     private function resultCsv(array $created): string
     {
         $csv = "\xEF\xBB\xBF";
-        $csv .= "company_name;name;email;phone;password\n";
+        $csv .= "company_name;name;email;phone;crm_company_id;password\n";
 
         foreach ($created as $row) {
             $cells = array_map(
@@ -250,6 +278,7 @@ class ClientController extends Controller
                     $row['name'],
                     $row['email'],
                     $row['phone'],
+                    $row['crm_company_id'],
                     $row['password'],
                 ],
             );
@@ -285,7 +314,7 @@ class ClientController extends Controller
         );
 
         $header = array_map(fn (string $cell): string => $this->normalizeHeader($cell), $parsed[0]);
-        $known = ['company_name', 'name', 'email', 'phone', 'password', 'bitrix_contact_id', 'bitrix_company_id'];
+        $known = ['company_name', 'name', 'email', 'phone', 'password', 'bitrix_contact_id', 'bitrix_company_id', 'crm_company_id'];
         $hasHeader = count(array_intersect($header, $known)) > 0;
 
         if (! $hasHeader) {
@@ -298,6 +327,7 @@ class ClientController extends Controller
                     'password' => 4,
                     'bitrix_contact_id' => 5,
                     'bitrix_company_id' => 6,
+                    'crm_company_id' => 7,
                 ],
                 $parsed,
                 1,
@@ -341,6 +371,7 @@ class ClientController extends Controller
             'password' => ['password', 'пароль', 'parola'],
             'bitrix_contact_id' => ['bitrix_contact_id', 'bitrix_contact', 'bitrix_contactid', 'bitrix_контакт'],
             'bitrix_company_id' => ['bitrix_company_id', 'bitrix_company', 'bitrix_companyid', 'bitrix_компания'],
+            'crm_company_id' => ['crm_company_id', 'crm_company', 'crm_id', 'crm_компания'],
         ];
 
         $map = [];
@@ -375,7 +406,37 @@ class ClientController extends Controller
             'phone' => ['nullable', 'string', 'max:50'],
             'bitrix_contact_id' => ['nullable', 'integer', 'min:1'],
             'bitrix_company_id' => ['nullable', 'integer', 'min:1'],
+            'crm_company_id' => [
+                'nullable',
+                'integer',
+                'min:1',
+                Rule::unique('users', 'crm_company_id')->ignore($client?->id),
+            ],
             'is_active' => ['nullable', 'boolean'],
         ]);
+    }
+
+    private function ensureCrmCompanyExists(?int $crmCompanyId, CrmCompanyDirectory $directory, ?User $client = null): void
+    {
+        if ($crmCompanyId === null || $crmCompanyId < 1) {
+            return;
+        }
+
+        // Keep an existing link even if CRM is temporarily unavailable or the
+        // company disappeared from the list: editing other fields must work.
+        if ($client !== null && (int) $client->crm_company_id === $crmCompanyId) {
+            return;
+        }
+
+        $companies = $directory->all();
+        if ($companies === []) {
+            return;
+        }
+
+        if (! in_array($crmCompanyId, array_column($companies, 'id'), true)) {
+            throw ValidationException::withMessages([
+                'crm_company_id' => __('site.client_crm_invalid'),
+            ]);
+        }
     }
 }

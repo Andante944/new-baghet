@@ -37,6 +37,7 @@
                         <th>{{ __('site.client') }}</th>
                         <th>Email</th>
                         <th>{{ __('site.phone_label') }}</th>
+                        <th>CRM</th>
                         <th>{{ __('site.orders') }}</th>
                         <th>{{ __('site.active') }}</th>
                         <th></th>
@@ -51,12 +52,13 @@
                             </td>
                             <td>{{ $client->email }}</td>
                             <td>{{ $client->phone ?: '—' }}</td>
+                            <td>{{ $client->crm_company_id ? 'CRM #'.$client->crm_company_id : '—' }}</td>
                             <td>{{ $client->orders_count }}</td>
                             <td>{{ $client->is_active ? __('site.yes') : __('site.no') }}</td>
                             <td><a href="{{ route('admin.clients.edit', $client) }}">{{ __('site.edit') }}</a></td>
                         </tr>
                     @empty
-                        <tr><td colspan="6">{{ __('site.no_clients') }}</td></tr>
+                        <tr><td colspan="7">{{ __('site.no_clients') }}</td></tr>
                     @endforelse
                 </tbody>
             </table>

@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
-@php $editing = $client->exists; @endphp
+@php
+    $editing = $client->exists;
+    $selectedCrm = (int) old('crm_company_id', $client->crm_company_id);
+    $crmIds = array_column($crmCompanies, 'id');
+@endphp
 @section('title', ($editing ? __('site.client_edit') : __('site.client_add')) . ' — Baghet')
 
 @section('content')
@@ -13,22 +17,44 @@
             @csrf
             @if($editing) @method('put') @endif
 
+            <label>
+                <span>{{ __('site.client_crm_company') }}</span>
+                <select name="crm_company_id" id="crm_company_id">
+                    <option value="">{{ __('site.client_crm_none') }}</option>
+                    @if($selectedCrm > 0 && ! in_array($selectedCrm, $crmIds, true))
+                        <option value="{{ $selectedCrm }}" selected>CRM #{{ $selectedCrm }} — {{ __('site.client_crm_unavailable') }}</option>
+                    @endif
+                    @foreach($crmCompanies as $company)
+                        <option
+                            value="{{ $company['id'] }}"
+                            data-name="{{ $company['name'] }}"
+                            data-phone="{{ $company['phone'] }}"
+                            data-email="{{ $company['email'] }}"
+                            @selected($selectedCrm === $company['id'])
+                        >
+                            {{ $company['name'] }}@if($company['business_name']) — {{ $company['business_name'] }}@endif
+                        </option>
+                    @endforeach
+                </select>
+                <small>{{ __('site.client_crm_hint') }}</small>
+            </label>
+
             <div class="form-grid">
                 <label>
                     <span>{{ __('site.contact_name') }}</span>
-                    <input name="name" value="{{ old('name', $client->name) }}" required>
+                    <input id="client_name" name="name" value="{{ old('name', $client->name) }}" required>
                 </label>
                 <label>
                     <span>{{ __('site.company') }}</span>
-                    <input name="company_name" value="{{ old('company_name', $client->company_name) }}">
+                    <input id="client_company_name" name="company_name" value="{{ old('company_name', $client->company_name) }}">
                 </label>
                 <label>
                     <span>Email</span>
-                    <input type="email" name="email" value="{{ old('email', $client->email) }}" required>
+                    <input id="client_email" type="email" name="email" value="{{ old('email', $client->email) }}" required>
                 </label>
                 <label>
                     <span>{{ __('site.phone_label') }}</span>
-                    <input name="phone" value="{{ old('phone', $client->phone) }}">
+                    <input id="client_phone" name="phone" value="{{ old('phone', $client->phone) }}">
                 </label>
                 <label>
                     <span>{{ __('site.password') }} @if($editing)<small>{{ __('site.password_leave_blank') }}</small>@else<small>{{ __('site.client_password_auto') }}</small>@endif</span>
@@ -56,3 +82,25 @@
     </div>
 </section>
 @endsection
+
+@push('scripts')
+<script>
+    document.getElementById('crm_company_id')?.addEventListener('change', function () {
+        const option = this.selectedOptions[0];
+        if (!option || !option.value) {
+            return;
+        }
+
+        const fill = (id, value) => {
+            const field = document.getElementById(id);
+            if (field && !field.value && value) {
+                field.value = value;
+            }
+        };
+
+        fill('client_company_name', option.dataset.name);
+        fill('client_phone', option.dataset.phone);
+        fill('client_email', option.dataset.email);
+    });
+</script>
+@endpush

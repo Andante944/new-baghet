@@ -24,6 +24,7 @@
                             <th>{{ __('site.contact_name') }}</th>
                             <th>Email</th>
                             <th>{{ __('site.phone_label') }}</th>
+                            <th>CRM</th>
                             <th>{{ __('site.password') }}</th>
                         </tr>
                     </thead>
@@ -34,6 +35,7 @@
                                 <td>{{ $row['name'] }}</td>
                                 <td>{{ $row['email'] }}</td>
                                 <td>{{ $row['phone'] ?: '—' }}</td>
+                                <td>{{ $row['crm_company_id'] ? 'CRM #'.$row['crm_company_id'] : '—' }}</td>
                                 <td><code>{{ $row['password'] }}</code></td>
                             </tr>
                         @endforeach

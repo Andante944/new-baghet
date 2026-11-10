@@ -20,6 +20,7 @@ use Illuminate\Notifications\Notifiable;
     'phone',
     'bitrix_contact_id',
     'bitrix_company_id',
+    'crm_company_id',
     'is_active',
 ])]
 #[Hidden(['password', 'remember_token'])]
