@@ -33,7 +33,9 @@ class CrmCompanyDirectory
         }
 
         try {
-            $request = Http::timeout(15)->acceptJson();
+            $request = Http::timeout(15)
+                ->acceptJson()
+                ->withUserAgent('BaghetShowcase/1.0');
             if ($token !== '') {
                 $request = $request->withToken($token);
             }
