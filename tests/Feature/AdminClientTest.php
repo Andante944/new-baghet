@@ -40,8 +40,6 @@ class AdminClientTest extends TestCase
         $client = User::query()->where('email', 'ion@example.com')->firstOrFail();
         $this->assertSame('client', $client->role);
         $this->assertSame('SRL Exemplu', $client->company_name);
-        $this->assertNull($client->bitrix_contact_id);
-        $this->assertNull($client->bitrix_company_id);
         $this->assertTrue($client->is_active);
 
         $generated = $response->getSession()->get('generated_password');

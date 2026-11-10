@@ -18,8 +18,6 @@ use Illuminate\Notifications\Notifiable;
     'role',
     'company_name',
     'phone',
-    'bitrix_contact_id',
-    'bitrix_company_id',
     'crm_company_id',
     'is_active',
 ])]

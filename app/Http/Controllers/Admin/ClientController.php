@@ -149,8 +149,6 @@ class ClientController extends Controller
             $email = mb_strtolower($value('email'));
             $phone = $value('phone');
             $password = $value('password');
-            $bitrixContact = $value('bitrix_contact_id');
-            $bitrixCompany = $value('bitrix_company_id');
             $crmCompany = $value('crm_company_id');
 
             if ($name === '') {
@@ -173,13 +171,6 @@ class ClientController extends Controller
 
             if ($password !== '' && mb_strlen($password) < 8) {
                 $errors[] = __('site.client_import_line', ['line' => $line]).': '.__('site.client_import_short_password');
-
-                continue;
-            }
-
-            if (($bitrixContact !== '' && ! ctype_digit($bitrixContact))
-                || ($bitrixCompany !== '' && ! ctype_digit($bitrixCompany))) {
-                $errors[] = __('site.client_import_line', ['line' => $line]).': '.__('site.client_import_bad_bitrix');
 
                 continue;
             }
@@ -207,8 +198,6 @@ class ClientController extends Controller
                 'email' => $email,
                 'phone' => $phone !== '' ? $phone : null,
                 'password' => $password,
-                'bitrix_contact_id' => $bitrixContact !== '' ? (int) $bitrixContact : null,
-                'bitrix_company_id' => $bitrixCompany !== '' ? (int) $bitrixCompany : null,
                 'crm_company_id' => $crmCompany !== '' ? (int) $crmCompany : null,
                 'is_active' => true,
             ]);
@@ -245,8 +234,8 @@ class ClientController extends Controller
     {
         return response()->streamDownload(function (): void {
             echo "\xEF\xBB\xBF";
-            echo "company_name;name;email;phone;password;bitrix_contact_id;bitrix_company_id;crm_company_id\n";
-            echo "SRL Exemplu;Ion Popescu;ion@example.com;+37360000000;;;;\n";
+            echo "company_name;name;email;phone;password;crm_company_id\n";
+            echo "SRL Exemplu;Ion Popescu;ion@example.com;+37360000000;;\n";
         }, 'client-import-template.csv', [
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
@@ -349,7 +338,7 @@ class ClientController extends Controller
         );
 
         $header = array_map(fn (string $cell): string => $this->normalizeHeader($cell), $parsed[0]);
-        $known = ['company_name', 'name', 'email', 'phone', 'password', 'bitrix_contact_id', 'bitrix_company_id', 'crm_company_id'];
+        $known = ['company_name', 'name', 'email', 'phone', 'password', 'crm_company_id'];
         $hasHeader = count(array_intersect($header, $known)) > 0;
 
         if (! $hasHeader) {
@@ -360,9 +349,7 @@ class ClientController extends Controller
                     'email' => 2,
                     'phone' => 3,
                     'password' => 4,
-                    'bitrix_contact_id' => 5,
-                    'bitrix_company_id' => 6,
-                    'crm_company_id' => 7,
+                    'crm_company_id' => 5,
                 ],
                 $parsed,
                 1,
@@ -404,8 +391,6 @@ class ClientController extends Controller
             'email' => ['email', 'e_mail', 'mail', 'почта', 'электронная_почта'],
             'phone' => ['phone', 'phone_number', 'tel', 'telefon', 'телефон'],
             'password' => ['password', 'пароль', 'parola'],
-            'bitrix_contact_id' => ['bitrix_contact_id', 'bitrix_contact', 'bitrix_contactid', 'bitrix_контакт'],
-            'bitrix_company_id' => ['bitrix_company_id', 'bitrix_company', 'bitrix_companyid', 'bitrix_компания'],
             'crm_company_id' => ['crm_company_id', 'crm_company', 'crm_id', 'crm_компания'],
         ];
 
@@ -439,8 +424,6 @@ class ClientController extends Controller
             'password' => ['nullable', 'string', 'min:8'],
             'company_name' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
-            'bitrix_contact_id' => ['nullable', 'integer', 'min:1'],
-            'bitrix_company_id' => ['nullable', 'integer', 'min:1'],
             'crm_company_id' => [
                 'nullable',
                 'integer',
