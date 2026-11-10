@@ -9,8 +9,20 @@
             <a class="back-link" href="{{ route('admin.dashboard') }}">← {{ __('site.nav_admin') }}</a>
             <h1>{{ __('site.clients') }}</h1>
         </div>
-        <a class="btn btn--primary" href="{{ route('admin.clients.create') }}">{{ __('site.client_add') }}</a>
+        <div class="account-head__actions">
+            <a class="btn btn--outline" href="{{ route('admin.clients.import') }}">{{ __('site.client_import') }}</a>
+            <a class="btn btn--primary" href="{{ route('admin.clients.create') }}">{{ __('site.client_add') }}</a>
+        </div>
     </div>
+
+    @if(session('generated_password'))
+        <div class="panel">
+            <p><strong>{{ __('site.client_password_generated') }}</strong></p>
+            <p>Email: <code>{{ session('generated_password')['email'] }}</code><br>
+                {{ __('site.password') }}: <code>{{ session('generated_password')['password'] }}</code></p>
+            <p class="muted">{{ __('site.client_password_once') }}</p>
+        </div>
+    @endif
 
     <form class="search-form" method="get">
         <input type="search" name="q" value="{{ request('q') }}" placeholder="{{ __('site.client_search') }}">

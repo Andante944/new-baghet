@@ -56,6 +56,10 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', AdminDashboardController::class)->name('dashboard');
+    Route::get('clients/import', [ClientController::class, 'importForm'])->name('clients.import');
+    Route::post('clients/import', [ClientController::class, 'import'])->name('clients.import.store');
+    Route::get('clients/import/template', [ClientController::class, 'importTemplate'])->name('clients.import.template');
+    Route::get('clients/import/{token}/download', [ClientController::class, 'downloadImport'])->name('clients.import.download');
     Route::resource('clients', ClientController::class)->except(['show', 'destroy']);
     Route::get('products', [AdminProductController::class, 'index'])->name('products.index');
     Route::get('products/{product}/edit', [AdminProductController::class, 'edit'])->name('products.edit');

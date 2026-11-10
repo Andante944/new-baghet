@@ -31,18 +31,20 @@
                     <input name="phone" value="{{ old('phone', $client->phone) }}">
                 </label>
                 <label>
-                    <span>{{ __('site.password') }} @if($editing)<small>{{ __('site.password_leave_blank') }}</small>@endif</span>
-                    <input type="password" name="password" @required(! $editing) autocomplete="new-password">
+                    <span>{{ __('site.password') }} @if($editing)<small>{{ __('site.password_leave_blank') }}</small>@else<small>{{ __('site.client_password_auto') }}</small>@endif</span>
+                    <input type="password" name="password" autocomplete="new-password">
                 </label>
                 <label>
-                    <span>Bitrix CONTACT_ID</span>
-                    <input type="number" name="bitrix_contact_id" value="{{ old('bitrix_contact_id', $client->bitrix_contact_id) }}" min="1">
+                    <span>Bitrix CONTACT_ID <small>{{ __('site.optional') }}</small></span>
+                    <input type="number" name="bitrix_contact_id" value="{{ old('bitrix_contact_id', $client->bitrix_contact_id) }}" min="1" placeholder="{{ __('site.optional') }}">
                 </label>
                 <label>
-                    <span>Bitrix COMPANY_ID</span>
-                    <input type="number" name="bitrix_company_id" value="{{ old('bitrix_company_id', $client->bitrix_company_id) }}" min="1">
+                    <span>Bitrix COMPANY_ID <small>{{ __('site.optional') }}</small></span>
+                    <input type="number" name="bitrix_company_id" value="{{ old('bitrix_company_id', $client->bitrix_company_id) }}" min="1" placeholder="{{ __('site.optional') }}">
                 </label>
             </div>
+
+            <p class="muted">{{ __('site.client_bitrix_hint') }}</p>
 
             <label class="check-row">
                 <input type="checkbox" name="is_active" value="1" @checked(old('is_active', $client->exists ? $client->is_active : true))>
