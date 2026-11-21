@@ -78,28 +78,25 @@
                 </a>
             @endif
             <div class="product-detail__price-row">
-                <span class="price price--lg">{{ number_format($product->displayPrice(), 2) }} $</span>
+                <span class="price price--lg">{{ number_format($product->wholesalePrice(), 2) }} $</span>
                 <span class="unit">{{ $product->category->slug === 'plastic' ? __('site.price_m') : __('site.price_pack') }}</span>
                 @if($product->inStock())
                     <span class="badge badge--ok">{{ __('site.in_stock') }}</span>
                 @else
                     <span class="badge badge--off">{{ __('site.out_stock') }}</span>
                 @endif
-                @guest
-                    <a class="price-badge price-badge--link" href="{{ route('contacts') }}">{{ __('site.opt_on_request_short') }}</a>
-                @else
-                    <span class="price-badge price-badge--auth">{{ __('site.opt_price_short') }}</span>
-                @endguest
             </div>
-            @guest
-                <div class="wholesale-request">
-                    <div>
-                        <strong>{{ __('site.opt_request_title') }}</strong>
-                        <p>{{ __('site.opt_request_text') }}</p>
-                    </div>
-                    <a class="btn btn--outline btn--sm" href="{{ route('contacts') }}">{{ __('site.opt_request_cta') }}</a>
+            <p class="price-note">
+                <strong>{{ $product->hasBox() ? __('site.opt_from_box_units', ['box' => $product->units_per_box]) : __('site.opt_from_box') }}</strong>
+                <span class="price-note__retail">{{ __('site.retail_short') }}: {{ number_format($product->retailPrice(), 2) }} $</span>
+            </p>
+            <div class="wholesale-request">
+                <div>
+                    <strong>{{ __('site.partner_title') }}</strong>
+                    <p>{{ __('site.partner_text') }}</p>
                 </div>
-            @endguest
+                <a class="btn btn--outline btn--sm" href="{{ route('contacts') }}">{{ __('site.partner_cta') }}</a>
+            </div>
             <h2 class="product-detail__h2">{{ __('site.specs_title') }}</h2>
             <ul class="spec-list">
                 <li><span>{{ __('site.sku') }}</span><strong>{{ $product->sku }}</strong></li>
@@ -116,6 +113,12 @@
                     <span>{{ __('site.stock_label') }}</span>
                     <strong>{{ $product->stock }} {{ __('site.pcs') }}</strong>
                 </li>
+                @if($product->hasBox())
+                    <li>
+                        <span>{{ __('site.box_units') }}</span>
+                        <strong>{{ $product->units_per_box }} {{ __('site.pcs') }}</strong>
+                    </li>
+                @endif
             </ul>
             <p class="hint stock-note">{{ __('site.stock_note') }}</p>
             @if($product->descriptionHtml())

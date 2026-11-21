@@ -104,7 +104,7 @@ class SeoTest extends TestCase
             ->assertSee('product:price:amount', false)
             ->assertSee('100-01-02')
             ->assertSee('Похожие товары')
-            ->assertSee('Опт — по запросу');
+            ->assertSee('Стать партнёром');
         $this->assertStringContainsString(
             'wholesale-request',
             (string) $this->get(route('catalog.show', '100-01-01-seo'))->getContent()

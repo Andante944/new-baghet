@@ -27,15 +27,12 @@
             @endif
         </div>
         <div class="product-meta__bottom">
-            <span class="price">{{ number_format($product->displayPrice(), 2) }} $</span>
+            <span class="price">{{ number_format($product->wholesalePrice(), 2) }} $</span>
             <span class="unit">
                 {{ $catSlug === 'plastic' ? __('site.price_m') : __('site.price_pack') }}
             </span>
-            @guest
-                <span class="price-badge">{{ __('site.opt_on_request_short') }}</span>
-            @else
-                <span class="price-badge price-badge--auth">{{ __('site.opt_price_short') }}</span>
-            @endguest
+            <span class="price-badge">{{ $product->hasBox() ? __('site.opt_box_short_units', ['box' => $product->units_per_box]) : __('site.opt_box_short') }}</span>
         </div>
+        <p class="product-meta__retail">{{ __('site.retail_short') }}: {{ number_format($product->retailPrice(), 2) }} $</p>
     </div>
 </a>

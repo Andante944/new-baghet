@@ -881,6 +881,19 @@ input {
   line-height: 1.45;
 }
 
+.price-note__retail {
+  display: block;
+  margin-top: 0.2rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.product-meta__retail {
+  margin: 0.25rem 0 0;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
 /* Contacts */
 .contacts-grid {
   display: grid;

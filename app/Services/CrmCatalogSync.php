@@ -96,6 +96,14 @@ class CrmCatalogSync
                 }
             }
 
+            // Штук в коробке: из CRM (units_per_box), иначе null.
+            $unitsPerBox = isset($item['units_per_box']) && (int) $item['units_per_box'] > 0
+                ? (int) $item['units_per_box']
+                : null;
+            if ((int) ($product->units_per_box ?? 0) !== (int) ($unitsPerBox ?? 0)) {
+                $payload['units_per_box'] = $unitsPerBox;
+            }
+
             if ($payload === []) {
                 continue;
             }
@@ -158,6 +166,7 @@ class CrmCatalogSync
                 'name_ro' => $name,
                 'price' => $price ?? 0,
                 'stock' => isset($item['qty']) && $item['qty'] !== null ? (int) round((float) $item['qty']) : 0,
+                'units_per_box' => isset($item['units_per_box']) && (int) $item['units_per_box'] > 0 ? (int) $item['units_per_box'] : null,
                 'is_active' => ! str_contains(mb_strtolower($name), 'снят'),
                 'crm_product_id' => ($crmId > 0 && ! $crmIdTaken) ? $crmId : null,
             ]);

@@ -47,6 +47,7 @@ class CrmCatalogSyncTest extends TestCase
                         'name' => 'CRM bagheta name',
                         'sale_price' => 12.50,
                         'sale_price_per_meter' => 4.31,
+                        'units_per_box' => 24,
                     ],
                 ],
             ]),
@@ -62,6 +63,7 @@ class CrmCatalogSyncTest extends TestCase
         $this->assertSame('CRM bagheta name', $product->name_ru);
         // Витрина торгует за метр: берём sale_price_per_meter, а не цену палки.
         $this->assertSame('4.3100', $product->price);
+        $this->assertSame(24, $product->units_per_box);
         $this->assertSame('products/1.jpg', $product->image_path);
 
         Http::assertSent(function ($request) {

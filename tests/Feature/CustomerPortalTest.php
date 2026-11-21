@@ -38,7 +38,35 @@ class CustomerPortalTest extends TestCase
         $this->getJson(route('catalog.search', ['q' => '100-01']))
             ->assertOk()
             ->assertJsonPath('products.0.sku', '100-01-01')
-            ->assertJsonPath('products.0.price', '13.00');
+            ->assertJsonPath('products.0.price', '10.00');
+    }
+
+    public function test_wholesale_price_is_public_and_retail_is_shown_below_with_box(): void
+    {
+        $category = Category::query()->create([
+            'slug' => 'plastic',
+            'name_ru' => 'Пластиковый багет',
+            'name_ro' => 'Baghetă plastic',
+        ]);
+        Product::query()->create([
+            'category_id' => $category->id,
+            'sku' => '95-01-01',
+            'slug' => '95-01-01-box',
+            'name_ru' => 'Пластиковый багет: 95-01-01',
+            'price' => 10,
+            'stock' => 5,
+            'units_per_box' => 12,
+            'is_active' => true,
+        ]);
+
+        $this->get(route('catalog.show', '95-01-01-box'))
+            ->assertOk()
+            ->assertSee('10.00 $')
+            ->assertSee('Оптовая цена — от 1 коробки (12 шт.)')
+            ->assertSee('Розница: 13.00 $')
+            ->assertSee('Стать партнёром')
+            ->assertSee('В коробке')
+            ->assertDontSee('Опт — по запросу');
     }
 
     public function test_signed_in_client_sees_wholesale_price_in_public_catalog(): void

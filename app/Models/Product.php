@@ -20,6 +20,7 @@ class Product extends Model
         'description_ro',
         'price',
         'stock',
+        'units_per_box',
         'width',
         'color',
         'type',
@@ -35,6 +36,7 @@ class Product extends Model
         return [
             'price' => 'decimal:4',
             'stock' => 'integer',
+            'units_per_box' => 'integer',
             'crm_product_id' => 'integer',
             'is_active' => 'boolean',
         ];
@@ -114,15 +116,23 @@ class Product extends Model
         return (float) $this->price;
     }
 
-    /** Guest retail = wholesale + 30% */
-    public function retailPrice(): float
+    /** Есть ли у товара коробка (штук в коробке известно). */
+    public function hasBox(): bool
     {
-        return round($this->wholesalePrice() * 1.3, 2);
+        return (int) ($this->units_per_box ?? 0) > 0;
     }
 
-    /** Retail for guests, wholesale for signed-in clients. */
+    /** Retail = wholesale + markup из config/catalog.php (по умолчанию 30%). */
+    public function retailPrice(): float
+    {
+        $markup = max(0.0, (float) config('catalog.retail_markup', 0.30));
+
+        return round($this->wholesalePrice() * (1 + $markup), 2);
+    }
+
+    /** Основная цена на витрине — оптовая (доступна всем). */
     public function displayPrice(): float
     {
-        return auth()->check() ? $this->wholesalePrice() : $this->retailPrice();
+        return $this->wholesalePrice();
     }
 }
