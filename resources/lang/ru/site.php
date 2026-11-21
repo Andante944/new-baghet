@@ -65,6 +65,8 @@ return [
     'opt_from_box_units' => 'Оптовая цена — от 1 коробки (:box шт.)',
     'opt_box_short' => 'Опт — от 1 коробки',
     'opt_box_short_units' => 'Опт — от 1 коробки (:box шт.)',
+    'your_price' => 'Ваша цена',
+    'discount_label' => 'скидка :percent %',
     'retail_short' => 'Розница',
     'partner_title' => 'Стать партнёром',
     'partner_text' => 'Свяжитесь с нами — согласуем особые условия и цены под ваш объём.',

@@ -69,7 +69,7 @@ class CartController extends Controller
                 return null;
             }
 
-            $unitPrice = $product->wholesalePrice();
+            $unitPrice = \App\Services\ClientDiscount::price($product->wholesalePrice());
 
             return (object) [
                 'product' => $product,

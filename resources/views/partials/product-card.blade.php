@@ -34,5 +34,9 @@
             <span class="price-badge">{{ $product->hasBox() ? __('site.opt_box_short_units', ['box' => $product->units_per_box]) : __('site.opt_box_short') }}</span>
         </div>
         <p class="product-meta__retail">{{ __('site.retail_short') }}: {{ number_format($product->retailPrice(), 2) }} $</p>
+        @php($cardDiscount = \App\Services\ClientDiscount::percent())
+        @if($cardDiscount > 0)
+            <p class="product-meta__client">{{ __('site.your_price') }}: {{ number_format(\App\Services\ClientDiscount::price($product->wholesalePrice()), 2) }} $</p>
+        @endif
     </div>
 </a>

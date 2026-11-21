@@ -65,6 +65,8 @@ return [
     'opt_from_box_units' => 'Preț en-gros — de la 1 cutie (:box buc.)',
     'opt_box_short' => 'En-gros — de la 1 cutie',
     'opt_box_short_units' => 'En-gros — de la 1 cutie (:box buc.)',
+    'your_price' => 'Prețul dumneavoastră',
+    'discount_label' => 'reducere :percent %',
     'retail_short' => 'Retail',
     'partner_title' => 'Deveniți partener',
     'partner_text' => 'Contactați-ne — convenim condiții și prețuri speciale pentru volumul dumneavoastră.',

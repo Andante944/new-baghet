@@ -894,6 +894,17 @@ input {
   color: var(--ink-soft);
 }
 
+.product-meta__client {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--brass);
+}
+
+.price-note--client strong {
+  color: var(--brass);
+}
+
 /* Contacts */
 .contacts-grid {
   display: grid;

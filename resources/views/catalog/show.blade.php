@@ -86,6 +86,13 @@
                     <span class="badge badge--off">{{ __('site.out_stock') }}</span>
                 @endif
             </div>
+            @php($clientDiscount = \App\Services\ClientDiscount::percent())
+            @if($clientDiscount > 0)
+                <p class="price-note price-note--client">
+                    <strong>{{ __('site.your_price') }}: {{ number_format(\App\Services\ClientDiscount::price($product->wholesalePrice()), 2) }} $ {{ __('site.price_m') }}</strong>
+                    <span class="price-note__retail">{{ __('site.discount_label', ['percent' => rtrim(rtrim(number_format($clientDiscount, 2, '.', ''), '0'), '.')]) }} · {{ number_format(\App\Services\ClientDiscount::stickPrice($product->wholesalePrice()), 2) }} $ {{ __('site.price_stick') }}</span>
+                </p>
+            @endif
             <p class="price-note">
                 <strong>{{ $product->hasBox() ? __('site.opt_from_box_units', ['box' => $product->units_per_box]) : __('site.opt_from_box') }}</strong>
                 <span class="price-note__retail">{{ __('site.retail_short') }}: {{ number_format($product->retailPrice(), 2) }} $</span>
