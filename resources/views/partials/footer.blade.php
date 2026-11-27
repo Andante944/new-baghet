@@ -3,6 +3,7 @@
         <div class="site-footer__brand">
             <a class="logo logo--footer" href="{{ route('home') }}">
                 <img class="logo__img" src="{{ asset('images/logo.svg') }}?v=3" alt="Baghet" width="200" height="76">
+                @include('partials.logo-decor')
             </a>
             <p>{{ __('site.footer_about') }}</p>
         </div>

@@ -38,7 +38,7 @@
   z-index: 3;
   width: min(100% - 2rem, var(--max));
   margin-inline: auto;
-  padding: 0.9rem 0 0.35rem;
+  padding: 1.4rem 0 0.35rem;
 }
 
 .gallery__bar .logo__img {

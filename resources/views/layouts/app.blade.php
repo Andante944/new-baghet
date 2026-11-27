@@ -39,6 +39,7 @@
     <div class="site-header__inner">
         <a class="logo" href="{{ route('home') }}">
             <img class="logo__img" src="{{ asset('images/logo.svg') }}?v=3" alt="Baghet" width="200" height="76">
+            @include('partials.logo-decor')
         </a>
         <nav class="nav" data-nav>
             <a href="{{ route('home') }}" @class(['is-active' => request()->routeIs('home')])>{{ __('site.nav_home') }}</a>

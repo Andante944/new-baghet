@@ -72,6 +72,7 @@ input {
 }
 
 .logo {
+  position: relative;
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
@@ -84,6 +85,24 @@ input {
   height: 52px;
   width: auto;
   background: transparent !important;
+}
+
+.logo__decor {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.logo__decor svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.logo__ornament {
+  filter: drop-shadow(0 1px 1px rgba(28, 25, 23, 0.18));
 }
 
 .nav {
